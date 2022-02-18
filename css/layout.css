@@ -1,0 +1,20 @@
+.container {
+  margin: 20px 30px;
+}
+
+@media only screen and (max-width: 733px) {
+  .container {
+    width: 330px;
+  }
+}
+
+.row {
+  display: flex;
+  margin: 30px 0;
+}
+
+.column-full {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}

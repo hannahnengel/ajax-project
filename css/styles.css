@@ -1,0 +1,60 @@
+.black-ground {
+  background-color: black;
+}
+
+* {
+  color: white;
+  font-family: "Work Sans", sans-serif;
+  font-size: 19px;
+  line-height: 22px;
+}
+
+.pink-text {
+  color: rgb(248 84 231 / 70%);
+  font-weight: bold;
+}
+
+h2 {
+  font-size: 25px;
+  line-height: 29px;
+}
+
+a {
+  text-decoration: none;
+}
+
+.button-white {
+  background-color: #fff;
+  border: none;
+  opacity: 0.9;
+  color: black;
+  font-size: 19px;
+  line-height: 22px;
+  padding: 15px 30px;
+  border-radius: 4px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-white:hover {
+  color: white;
+  background-color: rgb(248 84 231 / 47%);
+  cursor: pointer;
+}
+
+.top-margin-100 {
+  margin-top: 100px;
+}
+
+.top-margin-10 {
+  margin-top: 10px;
+}
+
+.bottom-margin-20 {
+  margin-bottom: 20px;
+}
+
+.padding-10 {
+  padding: 0 10px;
+}
