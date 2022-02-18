@@ -6,6 +6,10 @@
   .container {
     width: 330px;
   }
+
+  header > div.container > div.row > div.column-third {
+    padding: 0;
+  }
 }
 
 .row {
@@ -17,4 +21,31 @@
   width: 100%;
   justify-content: center;
   text-align: center;
+}
+
+.column-third {
+  width: calc(100% / 3);
+  text-align: center;
+}
+
+.column-fifth {
+  width: calc(100% / 5);
+  text-align: center;
+  margin-bottom: 45px;
+}
+
+.start-over-div {
+  text-align: start;
+}
+
+header > div.container > div.row > div.column-third {
+  align-self: center;
+}
+
+.checkmark {
+  text-align: right;
+}
+
+.arrow {
+  text-align: left;
 }

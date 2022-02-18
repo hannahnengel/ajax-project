@@ -19,13 +19,23 @@ h2 {
   line-height: 29px;
 }
 
+h1 {
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 36px;
+  line-height: 57px;
+}
+
 a {
   text-decoration: none;
 }
 
+button {
+  border: none;
+  border-radius: 4px;
+}
+
 .button-white {
   background-color: #fff;
-  border: none;
   opacity: 0.9;
   color: black;
   font-size: 19px;
@@ -37,10 +47,38 @@ a {
   align-items: center;
 }
 
-.button-white:hover {
+.select-button {
+  color: white;
+  font-family: "Saira Condensed", sans-serif;
+  font-size: 20px;
+  line-height: 31px;
+  background-color: rgb(255 255 255 / 40%);
+  height: 100px;
+  width: 110px;
+}
+
+.button-white:hover,
+.select-button:hover {
   color: white;
   background-color: rgb(248 84 231 / 47%);
   cursor: pointer;
+}
+
+.start-over {
+  background-color: rgb(248 84 231 / 47%);
+  display: inline-flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 7px;
+  width: 135px;
+  height: 36px;
+  font-size: 15px;
+  line-height: 18px;
+}
+
+.start-over:hover {
+  cursor: pointer;
+  background-color: rgb(255 255 255 / 40%);
 }
 
 .top-margin-100 {
@@ -55,6 +93,10 @@ a {
   margin-bottom: 20px;
 }
 
+.padding-5 {
+  padding: 0 10px;
+}
+
 .padding-10 {
   padding: 0 10px;
 }
@@ -63,4 +105,8 @@ a {
 p.small-text > span,
 p.small-text > a {
   font-size: 15px;
+}
+
+.heartbeats-logo-small {
+  height: 70px;
 }
