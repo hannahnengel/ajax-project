@@ -14,7 +14,7 @@
     href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500&family=Work+Sans:wght@400;700&display=swap"
     rel="stylesheet">
 </head>
-<body class="black-ground">
+<body onload="onPageLoad()" class="black-ground">
   <header>
     <div class="container">
       <div class="row">
@@ -33,7 +33,7 @@
     <div class="row">
       <div class="column-full top-margin-100">
         <h2 class="pink-text">Sign in to get started</h2>
-        <button class="button-white top-margin-10"><img class="img-logo padding-10"
+        <button onclick="requestAuthorization()" class="button-white top-margin-10" ><img class="img-logo padding-10"
             src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Sign in with Spotify</button>
       </div>
     </div>
