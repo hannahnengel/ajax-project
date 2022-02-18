@@ -58,3 +58,9 @@ a {
 .padding-10 {
   padding: 0 10px;
 }
+
+.small-text,
+p.small-text > span,
+p.small-text > a {
+  font-size: 15px;
+}
