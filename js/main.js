@@ -60,13 +60,13 @@ function fetchAccessToken(code) {
   callAuthorizationApi(body);
 }
 
-// function refreshAccessToken() {
-//   var refreshToken = localStorage.getItem('refresh_token');
-//   var body = 'grant_type=refresh_token';
-//   body += '&refresh_token=' + refreshToken;
-//   body += '&client_id=' + clientId;
-//   callAuthorizationApi(body);
-// }
+function refreshAccessToken() {
+  var refreshToken = localStorage.getItem('refresh_token');
+  var body = 'grant_type=refresh_token';
+  body += '&refresh_token=' + refreshToken;
+  body += '&client_id=' + clientId;
+  callAuthorizationApi(body);
+}
 
 function callAuthorizationApi(body) {
   var xhr = new XMLHttpRequest();
@@ -116,3 +116,39 @@ function requestAuthorization() {
   url += '&scope=user-read-private playlist-modify-private playlist-modify-public user-read-email user-library-modify';
   window.location.href = url;
 }
+
+// SPOTIFY API REQUESTS //
+var USERID = 'https://api.spotify.com/v1/me';
+function getUserID() {
+  callApi('GET', USERID, null, handlegetUserIDResponse);
+}
+
+function callApi(method, url, body, callback) {
+  var accessToken = localStorage.getItem('access_token');
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+  xhr.send(body);
+  xhr.onload = callback;
+}
+
+function handlegetUserIDResponse() {
+  if (this.status === 200) {
+    var userID = JSON.parse(this.responseText);
+    localStorage.setItem('user_ID', userID.display_name);
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+getUserID();
+
+function signedInAs() {
+  var $userDisplayNameSpan = document.querySelector('span.user-display-name');
+  if ($userDisplayNameSpan !== null) {
+    $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
+  }
+}
+signedInAs();
