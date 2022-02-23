@@ -4,7 +4,9 @@
 var data = {
   genre: '',
   workoutMode: '',
-  duration: ''
+  duration: '',
+  playlistTracks: [],
+  playlistName: ''
 };
 
 var previousDataJSON = localStorage.getItem('data');
