@@ -1,6 +1,21 @@
 /* exported data */
 /* exported requestAuthorization */
 
+var data = {
+  genre: '',
+  workoutMode: '',
+  duration: ''
+};
+
+var previousDataJSON = localStorage.getItem('data');
+if (previousDataJSON !== null) {
+  data = JSON.parse(previousDataJSON);
+}
+window.addEventListener('beforeunload', function (event) {
+  var dataJSON = JSON.stringify(data);
+  localStorage.setItem('data', dataJSON);
+});
+
 // SPOTIFY AUTORIZATION CODE //
 var redirectUri = 'http://127.0.0.1:5500/welcome.html';
 
