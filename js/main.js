@@ -42,8 +42,11 @@ function toggleSelectItem(event) {
         $selectButton.style.backgroundColor = 'rgba(248, 84, 231, 0.47)';
         var genre = $selectButton.getAttribute('data-value');
         data.genre = genre;
+        $selectButton.classList.add('selected');
       } else if ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)') {
         $selectButton.style.backgroundColor = '';
+        data.genre = '';
+        $selectButton.classList.remove('selected');
       }
     }
 
