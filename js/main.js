@@ -41,9 +41,16 @@ var objectOfValues = {
 
 var $checkMark = document.querySelector('.checkmark');
 $checkMark.addEventListener('click', function (event) {
+
   data.genre = objectOfValues.genre;
   data.workoutMode = objectOfValues.workoutMode;
   data.duration = objectOfValues.duration;
+
+  var $aTagCheckmark = document.querySelector('.checkmark-a');
+  if ($aTagCheckmark.href === 'http://127.0.0.1:5500/genre.html') {
+    event.preventDefault();
+    window.alert('Must select at least one');
+  }
 });
 
 var $selectionContainer = document.querySelector('.selection-container');
@@ -70,6 +77,13 @@ function toggleSelectItem(event) {
       data.genre = '';
       $selectButton.classList.remove('selected');
       canSelect = true;
+    }
+
+    var $aTagCheckmark = document.querySelector('.checkmark-a');
+    if ((canSelect === false) && ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)')) {
+      $aTagCheckmark.href = 'welcome.html';
+    } else if ((canSelect === true) && ($selectButton.style.backgroundColor !== 'rgba(248, 84, 231, 0.47)')) {
+      $aTagCheckmark.href = '';
     }
   }
 }
