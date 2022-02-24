@@ -1,12 +1,15 @@
 /* exported data */
 /* exported requestAuthorization */
+/* global requestAccessToken */
+/* exported requestAccessToken */
 
 var data = {
   genre: '',
   workoutMode: '',
   duration: '',
   playlistTracks: [],
-  playlistName: ''
+  playlistName: '',
+  catPlaylists: {}
 };
 
 var previousDataJSON = localStorage.getItem('data');
@@ -107,20 +110,9 @@ function requestAuthorization() {
   window.location.href = url;
 }
 
-// SPOTIFY API REQUESTS //
 var USERID = 'https://api.spotify.com/v1/me';
 function getUserID() {
   callApi('GET', USERID, null, handlegetUserIDResponse);
-}
-
-function callApi(method, url, body, callback) {
-  var accessToken = localStorage.getItem('access_token');
-  var xhr = new XMLHttpRequest();
-  xhr.open(method, url, true);
-  xhr.setRequestHeader('Content-Type', 'application/json');
-  xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
-  xhr.send(body);
-  xhr.onload = callback;
 }
 
 function handlegetUserIDResponse() {
@@ -134,11 +126,12 @@ function handlegetUserIDResponse() {
   }
 }
 getUserID();
-
-function signedInAs() {
-  var $userDisplayNameSpan = document.querySelector('span.user-display-name');
-  if ($userDisplayNameSpan !== null) {
-    $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
-  }
+function callApi(method, url, body, callback) {
+  var accessToken = localStorage.getItem('access_token');
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+  xhr.send(body);
+  xhr.onload = callback;
 }
-signedInAs();

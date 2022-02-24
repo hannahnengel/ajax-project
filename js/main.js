@@ -1,4 +1,6 @@
 /* exported requestAuthorization */
+/* global refreshAccessToken */
+/* exported refreshAccessToken */
 /* global data */
 /* exported data */
 
@@ -31,30 +33,42 @@ function blackSpotifyLogo(event) {
   }
 }
 
+function signedInAs() {
+  var $userDisplayNameSpan = document.querySelector('span.user-display-name');
+  if ($userDisplayNameSpan !== null) {
+    $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
+  }
+}
+signedInAs();
+
 var objectOfValues = {
   genre: '',
   workoutMode: '',
   duration: '',
   playlistTracks: [],
-  playlistName: ''
+  playlistName: '',
+  catPlaylists: {}
 };
 
-var $checkMark = document.querySelector('.checkmark');
-$checkMark.addEventListener('click', function (event) {
-
+var $aTagCheckmark = document.querySelector('.checkmark-a');
+$aTagCheckmark.addEventListener('click', function (event) {
+  event.preventDefault();
   data.genre = objectOfValues.genre;
   data.workoutMode = objectOfValues.workoutMode;
   data.duration = objectOfValues.duration;
+  data.catPlaylists = objectOfValues.catPlaylists;
 
-  var $aTagCheckmark = document.querySelector('.checkmark-a');
-  if ($aTagCheckmark.href === 'http://127.0.0.1:5500/genre.html') {
-    event.preventDefault();
+  if (goodToProceed === false) {
     window.alert('Must select at least one');
+  } else {
+    getCategoryPlaylists();
   }
+
 });
 
 var $selectionContainer = document.querySelector('.selection-container');
 var $selectButtons = document.querySelectorAll('button.select-button');
+var goodToProceed;
 
 $selectionContainer.addEventListener('click', toggleSelectItem);
 function toggleSelectItem(event) {
@@ -79,11 +93,51 @@ function toggleSelectItem(event) {
       canSelect = true;
     }
 
-    var $aTagCheckmark = document.querySelector('.checkmark-a');
     if ((canSelect === false) && ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)')) {
-      $aTagCheckmark.href = 'welcome.html';
+      goodToProceed = true;
     } else if ((canSelect === true) && ($selectButton.style.backgroundColor !== 'rgba(248, 84, 231, 0.47)')) {
-      $aTagCheckmark.href = '';
+      goodToProceed = false;
     }
   }
+}
+
+// SPOTIFY API REQUESTS //
+var CATPLAYLISTS;
+var category;
+var catPlaylists;
+
+function getCategoryPlaylists() {
+  category = objectOfValues.genre;
+  CATPLAYLISTS = 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists';
+  // getPlaylistItems();
+  callApi('GET', CATPLAYLISTS, null, handleCatPlaylistResponse);
+}
+
+function handleCatPlaylistResponse() {
+  if (this.status === 200) {
+    catPlaylists = objectOfValues.catPlaylists = JSON.parse(this.responseText);
+    createPlaylistIDs(catPlaylists);
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+
+    alert(this.responseText);
+  }
+}
+
+var catPlaylistIDs = [];
+function createPlaylistIDs(playlists) {
+  for (var i = 0; i < playlists.playlists.items.length; i++) {
+    catPlaylistIDs.push(playlists.playlists.items[i].id);
+  }
+}
+
+function callApi(method, url, body, callback) {
+  var accessToken = localStorage.getItem('access_token');
+  var xhr = new XMLHttpRequest();
+  xhr.open(method, url, true);
+  xhr.setRequestHeader('Content-Type', 'application/json');
+  xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
+  xhr.send(body);
+  xhr.onload = callback;
 }
