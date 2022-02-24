@@ -47,21 +47,25 @@ var objectOfValues = {
   duration: '',
   playlistTracks: [],
   playlistName: '',
-  catPlaylists: {}
+  APIData: {
+    catPlaylists: {},
+    allSongs: [],
+    catPlaylistIDs: [],
+    trackIDsMaster: []
+  }
 };
 
 var $aTagCheckmark = document.querySelector('.checkmark-a');
 $aTagCheckmark.addEventListener('click', function (event) {
   event.preventDefault();
-  data.genre = objectOfValues.genre;
-  data.workoutMode = objectOfValues.workoutMode;
-  data.duration = objectOfValues.duration;
-  data.catPlaylists = objectOfValues.catPlaylists;
-
   if (goodToProceed === false) {
     window.alert('Must select at least one');
   } else {
     getCategoryPlaylists();
+    data.genre = objectOfValues.genre;
+    data.workoutMode = objectOfValues.workoutMode;
+    data.duration = objectOfValues.duration;
+    data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
   }
 
 });
@@ -109,14 +113,16 @@ var catPlaylists;
 function getCategoryPlaylists() {
   category = objectOfValues.genre;
   CATPLAYLISTS = 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists';
-  // getPlaylistItems();
   callApi('GET', CATPLAYLISTS, null, handleCatPlaylistResponse);
 }
 
 function handleCatPlaylistResponse() {
   if (this.status === 200) {
-    catPlaylists = objectOfValues.catPlaylists = JSON.parse(this.responseText);
+    objectOfValues.APIData.catPlaylists = JSON.parse(this.responseText);
+    data.APIData.catPlaylists = objectOfValues.APIData.catPlaylists;
+    catPlaylists = objectOfValues.APIData.catPlaylists;
     createPlaylistIDs(catPlaylists);
+    getPlaylistItems();
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
@@ -127,9 +133,64 @@ function handleCatPlaylistResponse() {
 
 var catPlaylistIDs = [];
 function createPlaylistIDs(playlists) {
-  for (var i = 0; i < playlists.playlists.items.length; i++) {
-    catPlaylistIDs.push(playlists.playlists.items[i].id);
+  if (playlists.playlists !== null) {
+    for (var i = 0; i < playlists.playlists.items.length; i++) {
+      catPlaylistIDs.push(playlists.playlists.items[i].id);
+      objectOfValues.APIData.catPlaylistIDs = catPlaylistIDs;
+      data.APIData.catPlaylistIDs = objectOfValues.APIData.catPlaylistIDs;
+    }
   }
+}
+
+var PLAYLISTITEMS = '';
+var playlistItems;
+function getPlaylistItems() {
+  for (var i = 0; i < catPlaylistIDs.length; i++) {
+    var playlistID = catPlaylistIDs[i];
+    PLAYLISTITEMS = 'https://api.spotify.com/v1/playlists/' + playlistID + '/tracks';
+    callApi('GET', PLAYLISTITEMS, null, handlePlaylistItemsResponse);
+  }
+  objectOfValues.APIData.allSongs = allSongs;
+  data.APIData.allSongs = objectOfValues.APIData.allSongs;
+}
+
+function handlePlaylistItemsResponse() {
+  if (this.status === 200) {
+    playlistItems = objectOfValues.playlistItems = JSON.parse(this.responseText);
+    createTrackIDs(playlistItems.items);
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+var allSongs = [];
+var tempList = [];
+var trackIDsMaster = [];
+function createTrackIDs(tracks) {
+  if (tracks.tracks !== null) {
+    for (var i = 0; i < tracks.length; i++) {
+      if (!allSongs.includes(tracks[i].track.id)) { allSongs.push(tracks[i].track.id); }
+      objectOfValues.APIData.allSongs = allSongs;
+    }
+  }
+}
+function create100TrackIDList(trackIDs) {
+  for (var j = 0; j < trackIDs.length; j++) {
+    if ((j % 100 !== 0) && (j !== 0)) {
+      tempList.push(trackIDs[j]);
+    } else {
+      if (j !== 0) { trackIDsMaster.push(tempList); }
+      tempList = [];
+      tempList.push(trackIDs[j]);
+    }
+  }
+  if (tempList.length > 0) {
+    trackIDsMaster.push(tempList);
+  }
+  objectOfValues.APIData.trackIDsMaster = trackIDsMaster;
+  return objectOfValues.APIData.trackIDsMaster;
+
 }
 
 function callApi(method, url, body, callback) {

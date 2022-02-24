@@ -9,7 +9,12 @@ var data = {
   duration: '',
   playlistTracks: [],
   playlistName: '',
-  catPlaylists: {}
+  APIData: {
+    catPlaylists: {},
+    allSongs: [],
+    catPlaylistIDs: [],
+    trackIDsMaster: []
+  }
 };
 
 var previousDataJSON = localStorage.getItem('data');
