@@ -1,0 +1,79 @@
+.container {
+  margin: 20px 30px;
+  min-width: 375px;
+  max-width: 1500px;
+}
+
+@media only screen and (max-width: 733px) {
+  .container {
+    width: 330px;
+  }
+
+  header > div.container > div.row > div.column-third {
+    padding: 0;
+  }
+
+  .selection-container {
+    display: flex;
+    width: 100%;
+    height: 575px;
+    justify-content: center;
+    align-items: stretch;
+    flex-direction: row;
+    text-align: center;
+    flex-wrap: wrap;
+  }
+
+  .select-button-div {
+    flex-basis: 50%;
+  }
+}
+
+@media only screen and (min-width: 734px) {
+  .selection-container {
+    display: flex;
+    width: 100%;
+    height: 300px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    flex-direction: column;
+    flex-wrap: wrap;
+  }
+
+  .select-button-div {
+    flex-basis: 50%;
+  }
+}
+
+.row {
+  display: flex;
+  margin: 20px 0;
+}
+
+.column-full {
+  width: 100%;
+  justify-content: center;
+  text-align: center;
+}
+
+.column-third {
+  width: calc(100% / 3);
+  text-align: center;
+}
+
+.start-over-div {
+  text-align: start;
+}
+
+header > div.container > div.row > div.column-third {
+  align-self: center;
+}
+
+.checkmark-div {
+  text-align: right;
+}
+
+.arrow {
+  text-align: left;
+}

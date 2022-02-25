@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
     href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500&family=Work+Sans:wght@400;700&display=swap"
     rel="stylesheet">
 </head>
+
 <body onload="onPageLoad()" class="black-ground">
   <header>
     <div class="container">
@@ -32,13 +34,16 @@
     </div>
     <div class="row">
       <div class="column-full top-margin-100">
-        <h2 class="pink-text">Sign in to get started</h2>
-        <button onclick="requestAuthorization()" class="button-white top-margin-10" ><img class="img-logo padding-10"
-            src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Sign in with Spotify</button>
+        <button onclick="location.href = 'genre.html'" class="button-white top-margin-10 bottom-margin-20"><img class="headphone-img padding-10"
+            src="images/Headphones-icon-black.png" alt="Headphones Icon">Create Playlist</button>
+        <p class="small-text">You are signed in as <span class="user-display-name" style="text-decoration: underline;">Hannah</span>.</p>
+        <p class="small-text">Not you? <a class="pink-text" href="index.html">Click here to sign in to spotify</a></p>
+
       </div>
     </div>
   </main>
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
+
 </html>
