@@ -60,19 +60,22 @@ $aTagCheckmark.addEventListener('click', function (event) {
   event.preventDefault();
   if (goodToProceed === false) {
     window.alert('Must select at least one');
-  } else {
+    location.href = '';
+  } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'genre')) {
     getCategoryPlaylists();
     data.genre = objectOfValues.genre;
     data.workoutMode = objectOfValues.workoutMode;
     data.duration = objectOfValues.duration;
     data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
+    location.href = 'workoutmode.html';
+  } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'workout-mode')) {
+    data.workoutMode = objectOfValues.workoutMode;
   }
-  location.href = 'workoutmode.html';
 });
 
 var $selectionContainer = document.querySelector('.selection-container');
 var $selectButtons = document.querySelectorAll('button.select-button');
-var goodToProceed;
+var goodToProceed = false;
 
 $selectionContainer.addEventListener('click', toggleSelectItem);
 function toggleSelectItem(event) {
@@ -80,19 +83,35 @@ function toggleSelectItem(event) {
   for (var $selectButton of $selectButtons) {
     if ((event.target === $selectButton) && (canSelect === true) && ($selectButton.style.backgroundColor !== 'rgba(248, 84, 231, 0.47)')) {
       $selectButton.style.backgroundColor = 'rgba(248, 84, 231, 0.47)';
-      var genre = $selectButton.getAttribute('data-value');
-      objectOfValues.genre = genre;
+      if (event.target.getAttribute('data-type') === 'genre') {
+        var genre = $selectButton.getAttribute('data-value');
+        objectOfValues.genre = genre;
+      }
+      if (event.target.getAttribute('data-type') === 'workout-mode') {
+        var workoutMode = $selectButton.getAttribute('data-value');
+        objectOfValues.workoutMode = workoutMode;
+      }
       $selectButton.classList.add('selected');
       canSelect = false;
     } else if ((event.target === $selectButton) && ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)')) {
       $selectButton.style.backgroundColor = '';
-      objectOfValues.genre = '';
       $selectButton.classList.remove('selected');
       canSelect = true;
+      if (event.target.getAttribute('data-type') === 'genre') {
+        objectOfValues.genre = '';
+      }
+      if (event.target.getAttribute('data-type') === 'workout-mode') {
+        objectOfValues.workoutMode = '';
+      }
     }
     if ($selectButton !== event.target && $selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)') {
       $selectButton.style.backgroundColor = '';
-      data.genre = '';
+      if (event.target.getAttribute('data-type') === 'genre') {
+        data.genre = '';
+      }
+      if (event.target.getAttribute('data-type') === 'workout-mode') {
+        data.workoutMode = '';
+      }
       $selectButton.classList.remove('selected');
       canSelect = true;
     }

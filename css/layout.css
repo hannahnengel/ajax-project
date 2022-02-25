@@ -27,7 +27,8 @@
   #workout-mode {
     align-items: center;
     height: 290px;
-    margin-bottom: 290px;
+    margin-bottom: 245px;
+    margin-top: 50px;
   }
 
   .select-button-div {
@@ -50,6 +51,7 @@
   #workout-mode {
     height: 150px;
     margin-bottom: 300px;
+    margin-top: 50px;
   }
 
   .select-button-div {
