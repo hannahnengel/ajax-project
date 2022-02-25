@@ -144,6 +144,7 @@ function createPlaylistIDs(playlists) {
 
 var PLAYLISTITEMS = '';
 var playlistItems;
+var audioFeaturesMasterList = [];
 function getPlaylistItems() {
   for (var i = 0; i < catPlaylistIDs.length; i++) {
     var playlistID = catPlaylistIDs[i];
@@ -152,6 +153,19 @@ function getPlaylistItems() {
   }
   objectOfValues.APIData.allSongs = allSongs;
   data.APIData.allSongs = objectOfValues.APIData.allSongs;
+
+  for (var j = 0; j < data.APIData.trackIDsMaster.length; j++) {
+    createTrackIDsURLString(data.APIData.trackIDsMaster[j]);
+    getTrackAudioFeatures(data.APIData.trackIDsURLString);
+    trackIDsURLString = '';
+    data.APIData.trackIDsURLString = trackIDsURLString;
+  }
+  for (var k = 0; k < data.APIData.trackFeatures.length; k++) {
+    for (var l = 0; l < data.APIData.trackFeatures[k].audio_features.length; l++) {
+      audioFeaturesMasterList.push(data.APIData.trackFeatures[k].audio_features[l]);
+    }
+  }
+  data.APIData.audioFeaturesMasterList = audioFeaturesMasterList;
 }
 
 function handlePlaylistItemsResponse() {
@@ -201,4 +215,36 @@ function callApi(method, url, body, callback) {
   xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
   xhr.send(body);
   xhr.onload = callback;
+}
+
+var TRACKAUDIOFEATURES = '';
+function getTrackAudioFeatures(trackIDsURLString) {
+  TRACKAUDIOFEATURES = 'https://api.spotify.com/v1/audio-features?ids=' + trackIDsURLString;
+  callApi('GET', TRACKAUDIOFEATURES, null, handleTrackAudioFeatures);
+}
+
+var trackFeatures;
+var trackFeatureList = [];
+function handleTrackAudioFeatures() {
+  if (this.status === 200) {
+    trackFeatures = JSON.parse(this.responseText);
+    trackFeatureList.push(trackFeatures);
+    data.APIData.trackFeatures = trackFeatureList;
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+
+var trackIDsURLString = '';
+function createTrackIDsURLString(trackIDsMaster) {
+  for (var i = 0; i < trackIDsMaster.length; i++) {
+    if (i !== (trackIDsMaster.length - 1)) {
+      trackIDsURLString += trackIDsMaster[i] + '%2C';
+    } else {
+      trackIDsURLString += trackIDsMaster[i];
+    }
+  }
+  data.APIData.trackIDsURLString = trackIDsURLString;
 }
