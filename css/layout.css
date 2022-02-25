@@ -24,6 +24,12 @@
     flex-wrap: wrap;
   }
 
+  #workout-mode {
+    align-items: center;
+    height: 290px;
+    margin-bottom: 290px;
+  }
+
   .select-button-div {
     flex-basis: 50%;
   }
@@ -39,6 +45,11 @@
     text-align: center;
     flex-direction: column;
     flex-wrap: wrap;
+  }
+
+  #workout-mode {
+    height: 150px;
+    margin-bottom: 300px;
   }
 
   .select-button-div {

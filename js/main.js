@@ -67,7 +67,7 @@ $aTagCheckmark.addEventListener('click', function (event) {
     data.duration = objectOfValues.duration;
     data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
   }
-
+  location.href = 'workoutmode.html';
 });
 
 var $selectionContainer = document.querySelector('.selection-container');
