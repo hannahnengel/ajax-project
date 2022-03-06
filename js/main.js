@@ -41,6 +41,11 @@ function signedInAs() {
 }
 signedInAs();
 
+var minSongLength = 1.0;
+var maxSongLength = 3.6;
+minSongLength = minSongLength * 60000;
+maxSongLength = maxSongLength * 60000;
+
 var $aTagCheckmark = document.querySelector('.checkmark-a');
 if ($aTagCheckmark) {
   $aTagCheckmark.addEventListener('click', function (event) {
@@ -49,9 +54,40 @@ if ($aTagCheckmark) {
       window.alert('Must select at least one');
       location.href = '';
     } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'genre')) {
+      data.APIData = {
+        catPlaylists: {},
+        allSongs: [],
+        catPlaylistIDs: [],
+        trackIDsMaster: []
+      };
       getCategoryPlaylists();
 
     } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'workout-mode')) {
+      var previousDataJSON = localStorage.getItem('data');
+      var data2 = JSON.parse(previousDataJSON);
+      var audioFeaturesMasterList = data2.APIData.audioFeaturesMasterList;
+      data.FilteredData.audioFeaturesMasterList = [];
+      for (var i = 0; i < audioFeaturesMasterList.length; i++) {
+        if (audioFeaturesMasterList[i] !== null) {
+          if (audioFeaturesMasterList[i].duration_ms < maxSongLength && audioFeaturesMasterList[i].duration_ms > minSongLength && audioFeaturesMasterList[i].duration_ms !== null) {
+            data.FilteredData.audioFeaturesMasterList.push(audioFeaturesMasterList[i]);
+          }
+        }
+      }
+
+      data.FilteredData.audioFeaturesMasterList.sort((a, b) => (a.tempo - b.tempo));
+      var highestTempoIndex = (data.FilteredData.audioFeaturesMasterList.length - 1);
+      var highestTempo = data.FilteredData.audioFeaturesMasterList[highestTempoIndex].tempo;
+      for (var j = 0; j < data.FilteredData.audioFeaturesMasterList.length; j++) {
+        var normalizedTempo = data.FilteredData.audioFeaturesMasterList[j].tempo / highestTempo;
+        data.FilteredData.audioFeaturesMasterList[j].normalizedTempo = normalizedTempo;
+        var ntempo = data.FilteredData.audioFeaturesMasterList[j].normalizedTempo;
+        var energy = data.FilteredData.audioFeaturesMasterList[j].energy;
+        var danceability = data.FilteredData.audioFeaturesMasterList[j].danceability;
+        data.FilteredData.audioFeaturesMasterList[j].customValue = (ntempo * 3) + (energy * 5) + (danceability * 2);
+      }
+      data.FilteredData.audioFeaturesMasterList.sort((a, b) => (a.customValue - b.customValue));
+
       location.href = 'workoutmode.html';
     }
   });

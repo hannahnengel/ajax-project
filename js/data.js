@@ -15,6 +15,9 @@ var data = {
     allSongs: [],
     catPlaylistIDs: [],
     trackIDsMaster: []
+  },
+  FilteredData: {
+    audioFeaturesMasterList: []
   }
 };
 
