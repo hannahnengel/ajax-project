@@ -41,43 +41,30 @@ function signedInAs() {
 }
 signedInAs();
 
-var objectOfValues = {
-  genre: '',
-  workoutMode: '',
-  duration: '',
-  playlistTracks: [],
-  playlistName: '',
-  APIData: {
-    catPlaylists: {},
-    allSongs: [],
-    catPlaylistIDs: [],
-    trackIDsMaster: []
-  }
-};
-
 var $aTagCheckmark = document.querySelector('.checkmark-a');
-$aTagCheckmark.addEventListener('click', function (event) {
-  event.preventDefault();
-  if (goodToProceed === false) {
-    window.alert('Must select at least one');
-    location.href = '';
-  } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'genre')) {
-    getCategoryPlaylists();
-    data.genre = objectOfValues.genre;
-    data.workoutMode = objectOfValues.workoutMode;
-    data.duration = objectOfValues.duration;
-    data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
-    location.href = 'workoutmode.html';
-  } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'workout-mode')) {
-    data.workoutMode = objectOfValues.workoutMode;
-  }
-});
+if ($aTagCheckmark) {
+  $aTagCheckmark.addEventListener('click', function (event) {
+    event.preventDefault();
+    if (goodToProceed === false) {
+      window.alert('Must select at least one');
+      location.href = '';
+    } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'genre')) {
+      getCategoryPlaylists();
+
+    } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'workout-mode')) {
+      location.href = 'workoutmode.html';
+    }
+  });
+}
 
 var $selectionContainer = document.querySelector('.selection-container');
 var $selectButtons = document.querySelectorAll('button.select-button');
 var goodToProceed = false;
 
-$selectionContainer.addEventListener('click', toggleSelectItem);
+if ($selectionContainer) {
+  $selectionContainer.addEventListener('click', toggleSelectItem);
+}
+
 function toggleSelectItem(event) {
   var canSelect = true;
   for (var $selectButton of $selectButtons) {
@@ -85,11 +72,11 @@ function toggleSelectItem(event) {
       $selectButton.style.backgroundColor = 'rgba(248, 84, 231, 0.47)';
       if (event.target.getAttribute('data-type') === 'genre') {
         var genre = $selectButton.getAttribute('data-value');
-        objectOfValues.genre = genre;
+        data.genre = genre;
       }
       if (event.target.getAttribute('data-type') === 'workout-mode') {
         var workoutMode = $selectButton.getAttribute('data-value');
-        objectOfValues.workoutMode = workoutMode;
+        data.workoutMode = workoutMode;
       }
       $selectButton.classList.add('selected');
       canSelect = false;
@@ -98,10 +85,10 @@ function toggleSelectItem(event) {
       $selectButton.classList.remove('selected');
       canSelect = true;
       if (event.target.getAttribute('data-type') === 'genre') {
-        objectOfValues.genre = '';
+        data.genre = '';
       }
       if (event.target.getAttribute('data-type') === 'workout-mode') {
-        objectOfValues.workoutMode = '';
+        data.workoutMode = '';
       }
     }
     if ($selectButton !== event.target && $selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)') {
@@ -127,20 +114,17 @@ function toggleSelectItem(event) {
 // SPOTIFY API REQUESTS //
 var CATPLAYLISTS;
 var category;
-var catPlaylists;
 
 function getCategoryPlaylists() {
-  category = objectOfValues.genre;
+  category = data.genre;
   CATPLAYLISTS = 'https://api.spotify.com/v1/browse/categories/' + category + '/playlists';
   callApi('GET', CATPLAYLISTS, null, handleCatPlaylistResponse);
 }
 
 function handleCatPlaylistResponse() {
   if (this.status === 200) {
-    objectOfValues.APIData.catPlaylists = JSON.parse(this.responseText);
-    data.APIData.catPlaylists = objectOfValues.APIData.catPlaylists;
-    catPlaylists = objectOfValues.APIData.catPlaylists;
-    createPlaylistIDs(catPlaylists);
+    data.APIData.catPlaylists = JSON.parse(this.responseText);
+    createPlaylistIDs(data.APIData.catPlaylists);
     getPlaylistItems();
   } else if (this.status === 401) {
     refreshAccessToken();
@@ -155,42 +139,27 @@ function createPlaylistIDs(playlists) {
   if (playlists.playlists !== null) {
     for (var i = 0; i < playlists.playlists.items.length; i++) {
       catPlaylistIDs.push(playlists.playlists.items[i].id);
-      objectOfValues.APIData.catPlaylistIDs = catPlaylistIDs;
-      data.APIData.catPlaylistIDs = objectOfValues.APIData.catPlaylistIDs;
+      data.APIData.catPlaylistIDs = catPlaylistIDs;
     }
   }
 }
 
 var PLAYLISTITEMS = '';
-var playlistItems;
 var audioFeaturesMasterList = [];
+var trackIDsURLString = '';
 function getPlaylistItems() {
   for (var i = 0; i < catPlaylistIDs.length; i++) {
     var playlistID = catPlaylistIDs[i];
     PLAYLISTITEMS = 'https://api.spotify.com/v1/playlists/' + playlistID + '/tracks';
     callApi('GET', PLAYLISTITEMS, null, handlePlaylistItemsResponse);
   }
-  objectOfValues.APIData.allSongs = allSongs;
-  data.APIData.allSongs = objectOfValues.APIData.allSongs;
-
-  for (var j = 0; j < data.APIData.trackIDsMaster.length; j++) {
-    createTrackIDsURLString(data.APIData.trackIDsMaster[j]);
-    getTrackAudioFeatures(data.APIData.trackIDsURLString);
-    trackIDsURLString = '';
-    data.APIData.trackIDsURLString = trackIDsURLString;
-  }
-  for (var k = 0; k < data.APIData.trackFeatures.length; k++) {
-    for (var l = 0; l < data.APIData.trackFeatures[k].audio_features.length; l++) {
-      audioFeaturesMasterList.push(data.APIData.trackFeatures[k].audio_features[l]);
-    }
-  }
-  data.APIData.audioFeaturesMasterList = audioFeaturesMasterList;
+  data.APIData.allSongs = allSongs;
 }
 
 function handlePlaylistItemsResponse() {
   if (this.status === 200) {
-    playlistItems = objectOfValues.playlistItems = JSON.parse(this.responseText);
-    createTrackIDs(playlistItems.items);
+    data.playlistItems = JSON.parse(this.responseText);
+    createTrackIDs(data.playlistItems.items);
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
@@ -200,14 +169,27 @@ function handlePlaylistItemsResponse() {
 var allSongs = [];
 var tempList = [];
 var trackIDsMaster = [];
+var playlistCounter = 0;
+var trackAudioFeaturesCounter = 0;
 function createTrackIDs(tracks) {
-  if (tracks.tracks !== null) {
+  if (tracks.track !== null) {
     for (var i = 0; i < tracks.length; i++) {
       if (!allSongs.includes(tracks[i].track.id)) { allSongs.push(tracks[i].track.id); }
-      objectOfValues.APIData.allSongs = allSongs;
+      data.APIData.allSongs = allSongs;
+    }
+    playlistCounter++;
+    if (playlistCounter === catPlaylistIDs.length) {
+      data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
+
+      for (var j = 0; j < data.APIData.trackIDsMaster.length; j++) {
+        trackIDsURLString = '';
+        createTrackIDsURLString(data.APIData.trackIDsMaster[j]);
+        getTrackAudioFeatures(data.APIData.trackIDsURLString);
+      }
     }
   }
 }
+
 function create100TrackIDList(trackIDs) {
   for (var j = 0; j < trackIDs.length; j++) {
     if ((j % 100 !== 0) && (j !== 0)) {
@@ -221,9 +203,8 @@ function create100TrackIDList(trackIDs) {
   if (tempList.length > 0) {
     trackIDsMaster.push(tempList);
   }
-  objectOfValues.APIData.trackIDsMaster = trackIDsMaster;
-  return objectOfValues.APIData.trackIDsMaster;
-
+  data.APIData.trackIDsMaster = trackIDsMaster;
+  return data.APIData.trackIDsMaster;
 }
 
 function callApi(method, url, body, callback) {
@@ -246,9 +227,19 @@ var trackFeatures;
 var trackFeatureList = [];
 function handleTrackAudioFeatures() {
   if (this.status === 200) {
+    trackAudioFeaturesCounter++;
     trackFeatures = JSON.parse(this.responseText);
     trackFeatureList.push(trackFeatures);
     data.APIData.trackFeatures = trackFeatureList;
+    if (trackAudioFeaturesCounter === data.APIData.trackIDsMaster.length) {
+      for (var k = 0; k < data.APIData.trackFeatures.length; k++) {
+        for (var l = 0; l < data.APIData.trackFeatures[k].audio_features.length; l++) {
+          audioFeaturesMasterList.push(data.APIData.trackFeatures[k].audio_features[l]);
+        }
+      }
+      data.APIData.audioFeaturesMasterList = audioFeaturesMasterList;
+      location.href = 'workoutmode.html';
+    }
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
@@ -256,7 +247,6 @@ function handleTrackAudioFeatures() {
   }
 }
 
-var trackIDsURLString = '';
 function createTrackIDsURLString(trackIDsMaster) {
   for (var i = 0; i < trackIDsMaster.length; i++) {
     if (i !== (trackIDsMaster.length - 1)) {
