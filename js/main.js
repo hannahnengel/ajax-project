@@ -1,33 +1,182 @@
-/* exported requestAuthorization */
+
 /* global refreshAccessToken */
 /* exported refreshAccessToken */
 /* global data */
 /* exported data */
+var $pages = document.querySelectorAll('.page');
+var $aTags = document.querySelectorAll('a');
+var $headers = document.querySelectorAll('.header');
 
-var $buttonsWhite = document.querySelectorAll('.button-white');
-for (var $buttonWhite of $buttonsWhite) {
-  $buttonWhite.addEventListener('mouseover', whiteLogoHover);
-  $buttonWhite.addEventListener('mouseout', blackSpotifyLogo);
+function openWelcomeHeader() {
+  for (const header of $headers) {
+    if (header.getAttribute('data-view') === 'welcome-header') {
+      header.classList.add('active');
+      header.classList.remove('hidden');
+    } else {
+      header.classList.remove('active');
+      header.classList.add('hidden');
+    }
+  }
 }
 
+function openSelectionHeader() {
+  for (const header of $headers) {
+    if (header.getAttribute('data-view') === 'selection-header') {
+      header.classList.add('active');
+      header.classList.remove('hidden');
+    } else {
+      header.classList.remove('active');
+      header.classList.add('hidden');
+    }
+  }
+}
+
+function openWelcomePreloginPage() {
+  data.view = 'welcome-prelogin';
+  openWelcomeHeader();
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'welcome-prelogin') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openWelcomePostLoginPage() {
+  data.view = 'welcome-postlogin';
+  openWelcomeHeader();
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'welcome-postlogin') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openGenrePage() {
+  data.view = 'genre';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'genre');
+  }
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'genre') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openWorkoutPage() {
+  data.view = 'workout-mode';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'workout-mode');
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'workout-mode') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+window.addEventListener('DOMContentLoaded', function (event) {
+  if (data.view === 'welcome-prelogin' || data.view === 'welcome-postlogin') {
+    openWelcomeHeader();
+  }
+  if (data.view === 'genre' || data.view === 'workout-mode') {
+    openSelectionHeader();
+  }
+
+  if (data.view === 'welcome-prelogin') {
+    openWelcomePreloginPage();
+  }
+
+  if (data.view === 'welcome-postlogin') {
+    openWelcomePostLoginPage();
+  }
+  if (data.view === 'genre') {
+    openGenrePage();
+  }
+  if (data.view === 'workout-mode') {
+    openWorkoutPage();
+  }
+
+});
+
+var $body = document.querySelector('body');
+const params = new URLSearchParams(window.location.search);
+if (params.has('code')) {
+  $body.setAttribute('onload', 'onPageLoad()');
+  openWelcomePostLoginPage();
+}
+
+var $aTagPinkText = document.querySelector('a.pink-text');
+$aTagPinkText.addEventListener('click', function (event) {
+  openWelcomePreloginPage();
+});
+
+var $startOverButton = document.querySelector('.start-over');
+var $selected = document.querySelector('.selected');
+$startOverButton.addEventListener('click', function (event) {
+  $selected = document.querySelector('.selected');
+  goodToProceed = false;
+  canSelect = true;
+  openWelcomePostLoginPage();
+  if ($selected !== null) {
+    $selected.classList.remove('selected');
+  }
+  clearAllData();
+});
+
+var $signInButton = document.querySelector('.signin');
+var $createPlaylistButton = document.querySelector('.createPlaylist');
+
+$signInButton.addEventListener('mouseover', whiteLogoHover);
+$signInButton.addEventListener('mouseout', blackSpotifyLogo);
+$createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
+$createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
+
+$createPlaylistButton.addEventListener('click', function (event) {
+  openGenrePage();
+});
+
 function whiteLogoHover(event) {
-  var logoImg = $buttonWhite.querySelector('.img-logo');
+  var logoImg = $signInButton.querySelector('.img-logo');
   if (logoImg !== null) {
     logoImg.setAttribute('src', 'images/Spotify-Logo-White.png');
   }
 
-  var headphoneImg = $buttonWhite.querySelector('.headphone-img');
+  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
   if (headphoneImg !== null) {
     headphoneImg.setAttribute('src', 'images/Headphones-icon-white.png');
   }
 }
 function blackSpotifyLogo(event) {
-  var logoImg = $buttonWhite.querySelector('.img-logo');
+  var logoImg = $signInButton.querySelector('.img-logo');
   if (logoImg !== null) {
     logoImg.setAttribute('src', 'images/Spotify-Logo-Black.png');
   }
 
-  var headphoneImg = $buttonWhite.querySelector('.headphone-img');
+  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
   if (headphoneImg !== null) {
     headphoneImg.setAttribute('src', 'images/Headphones-icon-black.png');
   }
@@ -46,13 +195,13 @@ var maxSongLength = 3.6;
 minSongLength = minSongLength * 60000;
 maxSongLength = maxSongLength * 60000;
 
+var audioFeaturesMasterList = [];
 var $aTagCheckmark = document.querySelector('.checkmark-a');
 if ($aTagCheckmark) {
   $aTagCheckmark.addEventListener('click', function (event) {
     event.preventDefault();
     if (goodToProceed === false) {
       window.alert('Must select at least one');
-      location.href = '';
     } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'genre')) {
       data.APIData = {
         catPlaylists: {},
@@ -61,51 +210,51 @@ if ($aTagCheckmark) {
         trackIDsMaster: []
       };
       getCategoryPlaylists();
+      if ($aTagCheckmark.getAttribute('data-view') === 'genre') {
+        $aTagCheckmark.setAttribute('data-type', 'workout-mode');
+      }
 
     } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'workout-mode')) {
-      var previousDataJSON = localStorage.getItem('data');
-      var data2 = JSON.parse(previousDataJSON);
-      var audioFeaturesMasterList = data2.APIData.audioFeaturesMasterList;
-      data.FilteredData.audioFeaturesMasterList = [];
-      for (var i = 0; i < audioFeaturesMasterList.length; i++) {
-        if (audioFeaturesMasterList[i] !== null) {
-          if (audioFeaturesMasterList[i].duration_ms < maxSongLength && audioFeaturesMasterList[i].duration_ms > minSongLength && audioFeaturesMasterList[i].duration_ms !== null) {
-            data.FilteredData.audioFeaturesMasterList.push(audioFeaturesMasterList[i]);
+      var audioFeaturesMasterListFiltered = [];
+      audioFeaturesMasterListFiltered = data.APIData.audioFeaturesMasterList;
+      data.FilteredData.audioFeaturesMasterListFiltered = [];
+      for (var i = 0; i < audioFeaturesMasterListFiltered.length; i++) {
+        if (audioFeaturesMasterListFiltered[i] !== null) {
+          if (audioFeaturesMasterListFiltered[i].duration_ms < maxSongLength && audioFeaturesMasterListFiltered[i].duration_ms > minSongLength && audioFeaturesMasterListFiltered[i].duration_ms !== null) {
+            data.FilteredData.audioFeaturesMasterListFiltered.push(audioFeaturesMasterListFiltered[i]);
           }
         }
       }
 
-      data.FilteredData.audioFeaturesMasterList.sort((a, b) => (a.tempo - b.tempo));
-      var highestTempoIndex = (data.FilteredData.audioFeaturesMasterList.length - 1);
-      var highestTempo = data.FilteredData.audioFeaturesMasterList[highestTempoIndex].tempo;
-      for (var j = 0; j < data.FilteredData.audioFeaturesMasterList.length; j++) {
-        var normalizedTempo = data.FilteredData.audioFeaturesMasterList[j].tempo / highestTempo;
-        data.FilteredData.audioFeaturesMasterList[j].normalizedTempo = normalizedTempo;
-        var ntempo = data.FilteredData.audioFeaturesMasterList[j].normalizedTempo;
-        var energy = data.FilteredData.audioFeaturesMasterList[j].energy;
-        var danceability = data.FilteredData.audioFeaturesMasterList[j].danceability;
-        data.FilteredData.audioFeaturesMasterList[j].customValue = (ntempo * 3) + (energy * 5) + (danceability * 2);
+      data.FilteredData.audioFeaturesMasterListFiltered.sort((a, b) => (a.tempo - b.tempo));
+      var highestTempoIndex = (data.FilteredData.audioFeaturesMasterListFiltered.length - 1);
+      var highestTempo = data.FilteredData.audioFeaturesMasterListFiltered[highestTempoIndex].tempo;
+      for (var j = 0; j < data.FilteredData.audioFeaturesMasterListFiltered.length; j++) {
+        var normalizedTempo = data.FilteredData.audioFeaturesMasterListFiltered[j].tempo / highestTempo;
+        data.FilteredData.audioFeaturesMasterListFiltered[j].normalizedTempo = normalizedTempo;
+        var ntempo = data.FilteredData.audioFeaturesMasterListFiltered[j].normalizedTempo;
+        var energy = data.FilteredData.audioFeaturesMasterListFiltered[j].energy;
+        var danceability = data.FilteredData.audioFeaturesMasterListFiltered[j].danceability;
+        data.FilteredData.audioFeaturesMasterListFiltered[j].customValue = (ntempo * 3) + (energy * 5) + (danceability * 2);
       }
-      data.FilteredData.audioFeaturesMasterList.sort((a, b) => (a.customValue - b.customValue));
+      data.FilteredData.audioFeaturesMasterListFiltered.sort((a, b) => (a.customValue - b.customValue));
 
-      location.href = 'workoutmode.html';
     }
   });
 }
 
-var $selectionContainer = document.querySelector('.selection-container');
+var $selectionContainers = document.querySelectorAll('.selection-container');
 var $selectButtons = document.querySelectorAll('button.select-button');
 var goodToProceed = false;
+var canSelect = true;
 
-if ($selectionContainer) {
+for (var $selectionContainer of $selectionContainers) {
   $selectionContainer.addEventListener('click', toggleSelectItem);
 }
 
 function toggleSelectItem(event) {
-  var canSelect = true;
   for (var $selectButton of $selectButtons) {
-    if ((event.target === $selectButton) && (canSelect === true) && ($selectButton.style.backgroundColor !== 'rgba(248, 84, 231, 0.47)')) {
-      $selectButton.style.backgroundColor = 'rgba(248, 84, 231, 0.47)';
+    if ((event.target === $selectButton) && (canSelect === true) && (!$selectButton.classList.contains('selected'))) {
       if (event.target.getAttribute('data-type') === 'genre') {
         var genre = $selectButton.getAttribute('data-value');
         data.genre = genre;
@@ -116,7 +265,7 @@ function toggleSelectItem(event) {
       }
       $selectButton.classList.add('selected');
       canSelect = false;
-    } else if ((event.target === $selectButton) && ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)')) {
+    } else if ((event.target === $selectButton) && ($selectButton.classList.contains('selected'))) {
       $selectButton.style.backgroundColor = '';
       $selectButton.classList.remove('selected');
       canSelect = true;
@@ -127,7 +276,7 @@ function toggleSelectItem(event) {
         data.workoutMode = '';
       }
     }
-    if ($selectButton !== event.target && $selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)') {
+    if ($selectButton !== event.target && $selectButton.classList.contains('selected')) {
       $selectButton.style.backgroundColor = '';
       if (event.target.getAttribute('data-type') === 'genre') {
         data.genre = '';
@@ -139,13 +288,42 @@ function toggleSelectItem(event) {
       canSelect = true;
     }
 
-    if ((canSelect === false) && ($selectButton.style.backgroundColor === 'rgba(248, 84, 231, 0.47)')) {
+    if ((canSelect === false) && ($selectButton.classList.contains('selected'))) {
       goodToProceed = true;
-    } else if ((canSelect === true) && ($selectButton.style.backgroundColor !== 'rgba(248, 84, 231, 0.47)')) {
+    } else if ((canSelect === true) && (!$selectButton.classList.contains('selected'))) {
       goodToProceed = false;
     }
   }
 }
+var $backArrow = document.querySelector('.backArrow');
+$backArrow.addEventListener('click', function (event) {
+  $selected = document.querySelector('.selected');
+  $selected.classList.remove('selected');
+
+  if ($backArrow.getAttribute('data-type') === 'genre') {
+    openWelcomePostLoginPage();
+    data.genre = '';
+  }
+  if ($backArrow.getAttribute('data-type') === 'workout-mode') {
+    data.view = 'genre';
+    openGenrePage();
+    data.genre = '';
+    data.workoutMode = '';
+    data.APIData = {
+      catPlaylists: {},
+      allSongs: [],
+      catPlaylistIDs: [],
+      trackIDsMaster: []
+    };
+    data.FilteredData.audioFeaturesMasterListFiltered = [];
+    $selected = document.querySelector('.selected');
+    if ($selected !== null) {
+      $selected.classList.remove('selected');
+    }
+    canSelect = true;
+    goodToProceed = false;
+  }
+});
 
 // SPOTIFY API REQUESTS //
 var CATPLAYLISTS;
@@ -172,6 +350,7 @@ function handleCatPlaylistResponse() {
 
 var catPlaylistIDs = [];
 function createPlaylistIDs(playlists) {
+  catPlaylistIDs = [];
   if (playlists.playlists !== null) {
     for (var i = 0; i < playlists.playlists.items.length; i++) {
       catPlaylistIDs.push(playlists.playlists.items[i].id);
@@ -181,9 +360,15 @@ function createPlaylistIDs(playlists) {
 }
 
 var PLAYLISTITEMS = '';
-var audioFeaturesMasterList = [];
+
 var trackIDsURLString = '';
 function getPlaylistItems() {
+  allSongs = [];
+  tempList = [];
+  trackIDsMaster = [];
+  playlistCounter = 0;
+  trackAudioFeaturesCounter = 0;
+  audioFeaturesMasterList = [];
   for (var i = 0; i < catPlaylistIDs.length; i++) {
     var playlistID = catPlaylistIDs[i];
     PLAYLISTITEMS = 'https://api.spotify.com/v1/playlists/' + playlistID + '/tracks';
@@ -208,20 +393,20 @@ var trackIDsMaster = [];
 var playlistCounter = 0;
 var trackAudioFeaturesCounter = 0;
 function createTrackIDs(tracks) {
-  if (tracks.track !== null) {
-    for (var i = 0; i < tracks.length; i++) {
+  trackFeatureList = [];
+  for (var i = 0; i < tracks.length; i++) {
+    if (tracks[i].track !== null) {
       if (!allSongs.includes(tracks[i].track.id)) { allSongs.push(tracks[i].track.id); }
       data.APIData.allSongs = allSongs;
     }
-    playlistCounter++;
-    if (playlistCounter === catPlaylistIDs.length) {
-      data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
-
-      for (var j = 0; j < data.APIData.trackIDsMaster.length; j++) {
-        trackIDsURLString = '';
-        createTrackIDsURLString(data.APIData.trackIDsMaster[j]);
-        getTrackAudioFeatures(data.APIData.trackIDsURLString);
-      }
+  }
+  playlistCounter++;
+  if (playlistCounter === catPlaylistIDs.length) {
+    data.APIData.trackIDsMaster = create100TrackIDList(data.APIData.allSongs);
+    for (var j = 0; j < data.APIData.trackIDsMaster.length; j++) {
+      trackIDsURLString = '';
+      createTrackIDsURLString(data.APIData.trackIDsMaster[j]);
+      getTrackAudioFeatures(data.APIData.trackIDsURLString);
     }
   }
 }
@@ -274,7 +459,7 @@ function handleTrackAudioFeatures() {
         }
       }
       data.APIData.audioFeaturesMasterList = audioFeaturesMasterList;
-      location.href = 'workoutmode.html';
+      openWorkoutPage();
     }
   } else if (this.status === 401) {
     refreshAccessToken();
@@ -292,4 +477,20 @@ function createTrackIDsURLString(trackIDsMaster) {
     }
   }
   data.APIData.trackIDsURLString = trackIDsURLString;
+}
+
+function clearAllData() {
+  data.genre = '';
+  data.workoutMode = '';
+  data.duration = '';
+  data.playlistTracks = [];
+  data.playlistName = '';
+  data.APIData = {
+    catPlaylists: {},
+    allSongs: [],
+    catPlaylistIDs: [],
+    trackIDsMaster: []
+  };
+  data.FilteredData.audioFeaturesMasterListFiltered = [];
+  data.playlistItems = {};
 }

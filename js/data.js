@@ -5,9 +5,11 @@
 /* exported requestAccessToken */
 
 var data = {
+  view: 'prelogin-welcome',
   genre: '',
   workoutMode: '',
   duration: '',
+  playlistItems: {},
   playlistTracks: [],
   playlistName: '',
   APIData: {
@@ -17,7 +19,7 @@ var data = {
     trackIDsMaster: []
   },
   FilteredData: {
-    audioFeaturesMasterList: []
+    audioFeaturesMasterListFiltered: []
   }
 };
 
@@ -31,7 +33,7 @@ window.addEventListener('beforeunload', function (event) {
 });
 
 // SPOTIFY AUTORIZATION CODE //
-var redirectUri = 'http://127.0.0.1:5500/welcome.html';
+var redirectUri = 'http://127.0.0.1:5500/index.html';
 
 var clientId = 'eee70f43701b49e893b70270e4e93447';
 var clientSecret = '9ffca18e2fa54e4c84bb08141c3b8c5b';
