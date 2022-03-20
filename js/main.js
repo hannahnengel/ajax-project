@@ -297,12 +297,15 @@ function createPlayListIDList(trackList, workoutMode, duration) {
   var thirdLength;
   var numSongs;
   var length;
+  var songsPerSection;
+  var tempList;
+  var choppedTracks;
 
-  if (workoutMode === 'ramp-up') {
-    var songsPerSection = Math.floor(trackList.length / numSections);
+  if (workoutMode === 'ramp-up' || workoutMode === 'ramp-up-n-down') {
+    songsPerSection = Math.floor(trackList.length / numSections);
 
-    var tempList = [];
-    var choppedTracks = [];
+    tempList = [];
+    choppedTracks = [];
     for (var i = 0; i < trackList.length; i++) {
       tempList.push(trackList[i]);
       if ((i + 1) % songsPerSection === 0) {
@@ -392,9 +395,25 @@ function createPlayListIDList(trackList, workoutMode, duration) {
   allPotentialPlaylists.sort((a, b) => (a.deviation - b.deviation));
   var chosenPlaylistInfo = allPotentialPlaylists[0].tracks;
   var chosenPlaylistIDs = [];
+
   for (var n = 0; n < chosenPlaylistInfo.length; n++) {
     chosenPlaylistIDs.push(chosenPlaylistInfo[n].id);
   }
+
+  if (workoutMode === 'ramp-up-n-down') {
+    var list1 = [];
+    var list2 = [];
+    for (var u = 0; u < chosenPlaylistIDs.length; u++) {
+      if (u % 2 === 0) {
+        list1.push(chosenPlaylistIDs[u]);
+      } else {
+        list2.push(chosenPlaylistIDs[u]);
+      }
+    }
+    list2.reverse();
+    chosenPlaylistIDs = list1.concat(list2);
+  }
+
   data.playlistTrackIDs = chosenPlaylistIDs;
   // next run the get several tracks API call => within that handler run the next function that appends elements to the dom on the next page
 }
@@ -665,7 +684,7 @@ function clearAllData() {
   data.genre = '';
   data.workoutMode = '';
   data.duration = '';
-  data.playlistTracks = [];
+  data.playlistTrackIDs = [];
   data.playlistName = '';
   data.APIData = {
     catPlaylists: {},
