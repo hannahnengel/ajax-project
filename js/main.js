@@ -261,6 +261,7 @@ if ($aTagCheckmark) {
       }
       data.FilteredData.audioFeaturesMasterListFiltered.sort((a, b) => (a.customValue - b.customValue));
 
+      openDurationPage();
     }
   });
 }
