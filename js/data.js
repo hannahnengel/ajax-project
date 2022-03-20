@@ -10,7 +10,7 @@ var data = {
   workoutMode: '',
   duration: '',
   playlistItems: {},
-  playlistTracks: [],
+  playlistTrackIDs: [],
   playlistName: '',
   APIData: {
     catPlaylists: {},

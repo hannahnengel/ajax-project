@@ -274,21 +274,28 @@ function createPlayListIDList(trackList, workoutMode, duration) {
   var durationString = duration.slice(0, 2);
   duration = parseInt(durationString) * 60000;
 
-  if (workoutMode === 'ramp-up') {
-    var sectionBuffer;
-    if (durationString === '15') {
-      sectionBuffer = 1;
-    } else if (durationString === '30') {
-      sectionBuffer = 2;
-    } else if (durationString === '45') {
-      sectionBuffer = 3;
-    } else if (durationString === '60') {
-      sectionBuffer = 4;
-    } else if (durationString === '90') {
-      sectionBuffer = 6;
-    }
-    var numSections = Math.ceil(duration / maxSongLength) + sectionBuffer;
+  var sectionBuffer;
+  if (durationString === '15') {
+    sectionBuffer = 1;
+  } else if (durationString === '30') {
+    sectionBuffer = 2;
+  } else if (durationString === '45') {
+    sectionBuffer = 3;
+  } else if (durationString === '60') {
+    sectionBuffer = 4;
+  } else if (durationString === '90') {
+    sectionBuffer = 6;
+  }
+  var numSections = Math.ceil(duration / maxSongLength) + sectionBuffer;
+  var randomIndex;
 
+  var potentialPlaylistTracks;
+  var allPotentialPlaylists;
+  var potentialPlaylistTotalDuration;
+  var playlistDurationDeviation;
+  var potentialPlaylistObject;
+
+  if (workoutMode === 'ramp-up') {
     var songsPerSection = Math.floor(trackList.length / numSections);
 
     var tempList = [];
@@ -301,20 +308,20 @@ function createPlayListIDList(trackList, workoutMode, duration) {
       }
     }
 
-    var allPotentialPlaylists = [];
+    allPotentialPlaylists = [];
     for (var l = 0; l < 100; l++) {
-      var potentialPlaylistTracks = [];
+      potentialPlaylistTracks = [];
       for (var j = 0; j < choppedTracks.length; j++) {
         var length = choppedTracks[j].length;
-        var randomIndex = Math.floor(Math.random() * length);
+        randomIndex = Math.floor(Math.random() * length);
         potentialPlaylistTracks.push(choppedTracks[j][randomIndex]);
       }
-      var potentialPlaylistTotalDuration = 0;
+      potentialPlaylistTotalDuration = 0;
       for (var k = 0; k < potentialPlaylistTracks.length; k++) {
         potentialPlaylistTotalDuration += potentialPlaylistTracks[k].duration_ms;
       }
-      var playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
-      var potentialPlaylistObject = {
+      playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
+      potentialPlaylistObject = {
         tracks: potentialPlaylistTracks,
         totalDuration: potentialPlaylistTotalDuration / 60000,
         deviation: playlistDurationDeviation / 60000
@@ -322,8 +329,36 @@ function createPlayListIDList(trackList, workoutMode, duration) {
       allPotentialPlaylists.push(potentialPlaylistObject);
     }
   }
-  allPotentialPlaylists.sort((a, b) => (a.deviation - b.deviation));
 
+  if (workoutMode === 'hardcore') {
+    var thirdLength = Math.floor(trackList.length / 3);
+    var topThirdList = [];
+    for (var o = trackList.length - thirdLength; o < trackList.length; o++) {
+      topThirdList.push(trackList[o]);
+    }
+    var numSongs = numSections;
+
+    allPotentialPlaylists = [];
+    for (var p = 0; p < 100; p++) {
+      var topThirdListShuffled = shuffle(topThirdList);
+      potentialPlaylistTracks = topThirdListShuffled.slice(0, numSongs);
+
+      potentialPlaylistTotalDuration = 0;
+      for (var q = 0; q < potentialPlaylistTracks.length; q++) {
+        potentialPlaylistTotalDuration += potentialPlaylistTracks[q].duration_ms;
+      }
+      playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
+      potentialPlaylistObject = {
+        tracks: potentialPlaylistTracks,
+        totalDuration: potentialPlaylistTotalDuration / 60000,
+        deviation: playlistDurationDeviation / 60000
+      };
+      allPotentialPlaylists.push(potentialPlaylistObject);
+    }
+
+  }
+
+  allPotentialPlaylists.sort((a, b) => (a.deviation - b.deviation));
   var chosenPlaylistInfo = allPotentialPlaylists[0].tracks;
   var chosenPlaylistIDs = [];
   for (var n = 0; n < chosenPlaylistInfo.length; n++) {
@@ -331,6 +366,21 @@ function createPlayListIDList(trackList, workoutMode, duration) {
   }
   data.playlistTrackIDs = chosenPlaylistIDs;
   // next run the get several tracks API call => within that handler run the next function that appends elements to the dom on the next page
+  // location.href = 'NEXTPAGE.html' inside the next nested function
+}
+
+function shuffle(array) {
+  let currentIndex = array.length; let randomIndex;
+  while (currentIndex !== 0) {
+
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
 }
 
 var $selectionContainers = document.querySelectorAll('.selection-container');
