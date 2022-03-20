@@ -262,6 +262,8 @@ if ($aTagCheckmark) {
       data.FilteredData.audioFeaturesMasterListFiltered.sort((a, b) => (a.customValue - b.customValue));
 
       openDurationPage();
+    } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'duration')) {
+      //
     }
   });
 }
@@ -286,6 +288,11 @@ function toggleSelectItem(event) {
         var workoutMode = $selectButton.getAttribute('data-value');
         data.workoutMode = workoutMode;
       }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        var duration = $selectButton.getAttribute('data-value');
+        data.duration = duration;
+      }
+
       $selectButton.classList.add('selected');
       canSelect = false;
     } else if ((event.target === $selectButton) && ($selectButton.classList.contains('selected'))) {
@@ -298,6 +305,10 @@ function toggleSelectItem(event) {
       if (event.target.getAttribute('data-type') === 'workout-mode') {
         data.workoutMode = '';
       }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        data.duration = '';
+      }
+
     }
     if ($selectButton !== event.target && $selectButton.classList.contains('selected')) {
       $selectButton.style.backgroundColor = '';
@@ -306,6 +317,9 @@ function toggleSelectItem(event) {
       }
       if (event.target.getAttribute('data-type') === 'workout-mode') {
         data.workoutMode = '';
+      }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        data.duration = '';
       }
       $selectButton.classList.remove('selected');
       canSelect = true;
