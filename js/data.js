@@ -1,12 +1,15 @@
 /* exported data */
 /* exported requestAuthorization */
+/* exported onPageLoadInitial */
 /* global requestAccessToken */
 /* exported requestAccessToken */
 
 var data = {
+  view: 'prelogin-welcome',
   genre: '',
   workoutMode: '',
   duration: '',
+  playlistItems: {},
   playlistTracks: [],
   playlistName: '',
   APIData: {
@@ -14,6 +17,9 @@ var data = {
     allSongs: [],
     catPlaylistIDs: [],
     trackIDsMaster: []
+  },
+  FilteredData: {
+    audioFeaturesMasterListFiltered: []
   }
 };
 
@@ -27,7 +33,7 @@ window.addEventListener('beforeunload', function (event) {
 });
 
 // SPOTIFY AUTORIZATION CODE //
-var redirectUri = 'http://127.0.0.1:5500/welcome.html';
+var redirectUri = 'http://127.0.0.1:5500/index.html';
 
 var clientId = 'eee70f43701b49e893b70270e4e93447';
 var clientSecret = '9ffca18e2fa54e4c84bb08141c3b8c5b';
@@ -35,6 +41,10 @@ var clientSecret = '9ffca18e2fa54e4c84bb08141c3b8c5b';
 var AUTHORIZE = 'https://accounts.spotify.com/authorize/';
 var TOKEN = 'https://accounts.spotify.com/api/token';
 
+function onPageLoadInitial() {
+  localStorage.setItem('client_id', clientId);
+  localStorage.setItem('client_secret', clientSecret);
+}
 function onPageLoad() {
   clientId = localStorage.getItem('client_id', clientId);
   clientSecret = localStorage.getItem('client_secret', clientSecret);
@@ -77,16 +87,17 @@ function callAuthorizationApi(body) {
 
 function handleAuthorizationResponse() {
   if (this.status === 200) {
-    var data = JSON.parse(this.responseText);
-    if (data.access_token !== undefined) {
-      var accessToken = data.access_token;
+    var accessData = JSON.parse(this.responseText);
+    if (accessData.access_token !== undefined) {
+      var accessToken = accessData.access_token;
       localStorage.setItem('access_token', accessToken);
     }
-    if (data.refresh_token !== undefined) {
-      var refreshToken = data.refresh_token;
+    if (accessData.refresh_token !== undefined) {
+      var refreshToken = accessData.refresh_token;
       localStorage.setItem('refresh_token', refreshToken);
     }
     onPageLoad();
+    getUserID();
   } else {
     alert(this.responseText);
   }
@@ -119,18 +130,18 @@ var USERID = 'https://api.spotify.com/v1/me';
 function getUserID() {
   callApi('GET', USERID, null, handlegetUserIDResponse);
 }
-
 function handlegetUserIDResponse() {
   if (this.status === 200) {
     var userID = JSON.parse(this.responseText);
     localStorage.setItem('user_ID', userID.display_name);
+    signedInAs();
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
     alert(this.responseText);
   }
 }
-getUserID();
+
 function callApi(method, url, body, callback) {
   var accessToken = localStorage.getItem('access_token');
   var xhr = new XMLHttpRequest();
@@ -139,4 +150,12 @@ function callApi(method, url, body, callback) {
   xhr.setRequestHeader('Authorization', 'Bearer ' + accessToken);
   xhr.send(body);
   xhr.onload = callback;
+}
+
+function signedInAs() {
+  var $userDisplayNameSpan = document.querySelector('span.user-display-name');
+  var userID = localStorage.getItem('user_ID');
+  if ($userDisplayNameSpan !== null) {
+    $userDisplayNameSpan.innerHTML = userID;
+  }
 }

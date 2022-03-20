@@ -5,8 +5,8 @@
 * {
   color: white;
   font-family: "Work Sans", sans-serif;
-  font-size: 19px;
-  line-height: 22px;
+  font-size: 1.2rem;
+  line-height: 1.4rem;
 }
 
 .pink-text {
@@ -15,14 +15,14 @@
 }
 
 h2 {
-  font-size: 25px;
-  line-height: 29px;
+  font-size: 1.6rem;
+  line-height: 1.8rem;
 }
 
 h1 {
   font-family: "Saira Condensed", sans-serif;
-  font-size: 36px;
-  line-height: 57px;
+  font-size: 2.25rem;
+  line-height: 3.56rem;
 }
 
 a {
@@ -31,17 +31,17 @@ a {
 
 button {
   border: none;
-  border-radius: 4px;
+  border-radius: 0.25rem;
 }
 
 .button-white {
   background-color: #fff;
   opacity: 0.9;
   color: black;
-  font-size: 19px;
-  line-height: 22px;
-  padding: 15px 30px;
-  border-radius: 4px;
+  font-size: 1.18rem;
+  line-height: 1.4rem;
+  padding: 1rem 1.87rem;
+  border-radius: 0.25rem;
   display: inline-flex;
   justify-content: center;
   align-items: center;
@@ -50,11 +50,11 @@ button {
 .select-button {
   color: white;
   font-family: "Saira Condensed", sans-serif;
-  font-size: 20px;
-  line-height: 31px;
+  font-size: 1.25rem;
+  line-height: 2rem;
   background-color: rgb(255 255 255 / 40%);
-  height: 100px;
-  width: 110px;
+  height: 6.25rem;
+  width: 6.88rem;
 }
 
 .button-white:hover,
@@ -69,11 +69,11 @@ button {
   display: inline-flex;
   justify-content: flex-start;
   align-items: center;
-  padding: 7px;
-  width: 135px;
-  height: 36px;
-  font-size: 15px;
-  line-height: 18px;
+  padding: 0.44rem;
+  width: 8.44rem;
+  height: 2.25rem;
+  font-size: 0.94rem;
+  line-height: 1.13rem;
 }
 
 .start-over:hover {
@@ -82,36 +82,50 @@ button {
 }
 
 .top-margin-100 {
-  margin-top: 100px;
+  margin-top: 6.25rem;
 }
 
 .top-margin-10 {
-  margin-top: 10px;
+  margin-top: 0.625rem;
 }
 
 .bottom-margin-20 {
-  margin-bottom: 20px;
+  margin-bottom: 1.25rem;
 }
 
 .padding-5 {
-  padding: 0 10px;
+  padding: 0 0.625rem;
 }
 
 .padding-10 {
-  padding: 0 10px;
+  padding: 0 0.625rem;
 }
 
 .small-text,
 p.small-text > span,
 p.small-text > a {
-  font-size: 15px;
+  font-size: 1rem;
+}
+
+p.small-text > img {
+  vertical-align: bottom;
+  padding: 0 0.5rem;
 }
 
 .heartbeats-logo-small {
-  height: 70px;
+  height: 4.38rem;
 }
 
 a > img:hover {
-  width: 45px;
+  width: 2.8rem;
   height: auto;
+  cursor: pointer;
+}
+
+.hidden {
+  display: none;
+}
+
+.selected {
+  background-color: rgba(248, 84, 231, 0.47);
 }

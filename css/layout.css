@@ -1,5 +1,5 @@
 .container {
-  margin: 20px 30px;
+  margin: 1.25rem 1.88rem;
   min-width: 375px;
   max-width: 1500px;
 }
@@ -24,6 +24,13 @@
     flex-wrap: wrap;
   }
 
+  .workout-mode {
+    align-items: center;
+    height: 290px;
+    margin-bottom: 245px;
+    margin-top: 3.125rem;
+  }
+
   .select-button-div {
     flex-basis: 50%;
   }
@@ -41,6 +48,12 @@
     flex-wrap: wrap;
   }
 
+  .workout-mode {
+    height: 150px;
+    margin-bottom: 300px;
+    margin-top: 3.125rem;
+  }
+
   .select-button-div {
     flex-basis: 50%;
   }
@@ -48,7 +61,7 @@
 
 .row {
   display: flex;
-  margin: 20px 0;
+  margin: 1.25rem 0;
 }
 
 .column-full {
