@@ -21,8 +21,9 @@ h2 {
 
 h1 {
   font-family: "Saira Condensed", sans-serif;
-  font-size: 2.25rem;
-  line-height: 3.56rem;
+  font-size: 2rem;
+  line-height: 3rem;
+  margin: 0;
 }
 
 a {
@@ -53,8 +54,8 @@ button {
   font-size: 1.25rem;
   line-height: 2rem;
   background-color: rgb(255 255 255 / 40%);
-  height: 6.25rem;
-  width: 6.88rem;
+  height: 5.5rem;
+  width: 5.75rem;
 }
 
 .button-white:hover,

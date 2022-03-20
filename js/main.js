@@ -98,6 +98,25 @@ function openWorkoutPage() {
   }
 }
 
+function openDurationPage() {
+  data.view = 'duration';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'duration');
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'duration') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
 window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'welcome-prelogin' || data.view === 'welcome-postlogin') {
     openWelcomeHeader();
@@ -118,6 +137,9 @@ window.addEventListener('DOMContentLoaded', function (event) {
   }
   if (data.view === 'workout-mode') {
     openWorkoutPage();
+  }
+  if (data.view === 'duration') {
+    openDurationPage();
   }
 
 });

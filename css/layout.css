@@ -1,5 +1,5 @@
 .container {
-  margin: 1.25rem 1.88rem;
+  margin: 1rem;
   min-width: 375px;
   max-width: 1500px;
 }
@@ -31,6 +31,15 @@
     margin-top: 3.125rem;
   }
 
+  .duration {
+    align-items: center;
+    justify-content: center;
+    height: 600px;
+    margin-left: 5rem;
+    margin-right: 5rem;
+    margin-bottom: 0.2rem;
+  }
+
   .select-button-div {
     flex-basis: 50%;
   }
@@ -48,10 +57,15 @@
     flex-wrap: wrap;
   }
 
-  .workout-mode {
-    height: 150px;
-    margin-bottom: 300px;
-    margin-top: 3.125rem;
+  .workout-mode,
+  .duration {
+    height: 500px;
+    padding: 3rem 0 15rem;
+  }
+
+  .genre {
+    height: 500px;
+    padding: 3rem;
   }
 
   .select-button-div {
@@ -61,7 +75,7 @@
 
 .row {
   display: flex;
-  margin: 1.25rem 0;
+  margin: 0.75rem 0;
 }
 
 .column-full {
