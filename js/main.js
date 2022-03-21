@@ -62,6 +62,8 @@ function openWelcomePostLoginPage() {
 }
 
 function openGenrePage() {
+  canSelect = true;
+  goodToProceed = false;
   data.view = 'genre';
   openSelectionHeader();
 
@@ -80,6 +82,8 @@ function openGenrePage() {
 }
 
 function openWorkoutPage() {
+  canSelect = true;
+  goodToProceed = false;
   data.view = 'workout-mode';
   openSelectionHeader();
 
@@ -99,6 +103,8 @@ function openWorkoutPage() {
 }
 
 function openDurationPage() {
+  canSelect = true;
+  goodToProceed = false;
   data.view = 'duration';
   openSelectionHeader();
 
@@ -160,8 +166,6 @@ var $startOverButton = document.querySelector('.start-over');
 var $selected = document.querySelector('.selected');
 $startOverButton.addEventListener('click', function (event) {
   $selected = document.querySelector('.selected');
-  goodToProceed = false;
-  canSelect = true;
   openWelcomePostLoginPage();
   if ($selected !== null) {
     $selected.classList.remove('selected');
@@ -269,7 +273,6 @@ if ($aTagCheckmark) {
 }
 
 function createPlayListIDList(trackList, workoutMode, duration) {
-  // console.log(`creating your playlist based on ${workoutMode} and ${duration}!`);
 
   var durationString = duration.slice(0, 2);
   duration = parseInt(durationString) * 60000;
@@ -415,7 +418,8 @@ function createPlayListIDList(trackList, workoutMode, duration) {
   }
 
   data.playlistTrackIDs = chosenPlaylistIDs;
-  // next run the get several tracks API call => within that handler run the next function that appends elements to the dom on the next page
+  createFinalTrackIDsURLString(data.playlistTrackIDs);
+  getTracks(data.finalTrackIDsURLString);
 }
 
 function shuffle(array) {
@@ -499,7 +503,9 @@ function toggleSelectItem(event) {
 var $backArrow = document.querySelector('.backArrow');
 $backArrow.addEventListener('click', function (event) {
   $selected = document.querySelector('.selected');
-  $selected.classList.remove('selected');
+  if ($selected) {
+    $selected.classList.remove('selected');
+  }
 
   if ($backArrow.getAttribute('data-type') === 'genre') {
     openWelcomePostLoginPage();
@@ -518,7 +524,26 @@ $backArrow.addEventListener('click', function (event) {
     };
     data.FilteredData.audioFeaturesMasterListFiltered = [];
     $selected = document.querySelector('.selected');
-    if ($selected !== null) {
+    if ($selected) {
+      $selected.classList.remove('selected');
+    }
+    canSelect = true;
+    goodToProceed = false;
+  }
+  if ($backArrow.getAttribute('data-type') === 'duration') {
+    data.view = 'workout-mode';
+    openWorkoutPage();
+    data.duration = '';
+    data.workoutMode = '';
+    data.playlistTrackIDs = [];
+    data.playlistName = '';
+    data.finalTrackIDsURLString = '';
+    data.finalPlaylistCreationURLString = '';
+    data.playlistSongList = [];
+    data.playlistInfoList = {};
+    data.playlistID = '';
+    $selected = document.querySelector('.selected');
+    if ($selected) {
       $selected.classList.remove('selected');
     }
     canSelect = true;
@@ -680,12 +705,65 @@ function createTrackIDsURLString(trackIDsMaster) {
   data.APIData.trackIDsURLString = trackIDsURLString;
 }
 
+var TRACKS = '';
+function getTracks(trackIDsURLString) {
+  TRACKS = 'https://api.spotify.com/v1/tracks?ids=' + trackIDsURLString;
+  callApi('GET', TRACKS, null, handleTracks);
+}
+
+function handleTracks() {
+  if (this.status === 200) {
+    data.playlistInfoList = {};
+    data.playlistInfoList = JSON.parse(this.responseText);
+
+    var artist;
+    var trackName;
+    var id;
+    var obj;
+    data.playlistSongList = [];
+    for (var i = 0; i < data.playlistInfoList.tracks.length; i++) {
+      artist = data.playlistInfoList.tracks[i].artists[0].name;
+      trackName = data.playlistInfoList.tracks[i].name;
+      id = data.playlistInfoList.tracks[i].id;
+
+      obj = {
+        artist: artist,
+        trackName: trackName,
+        id: id
+      };
+      data.playlistSongList.push(obj);
+    }
+    // go to the mixit page
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+
+function createFinalTrackIDsURLString(playlistTrackIDs) {
+  trackIDsURLString = '';
+  for (var i = 0; i < playlistTrackIDs.length; i++) {
+    if (i !== (playlistTrackIDs.length - 1)) {
+      trackIDsURLString += playlistTrackIDs[i] + '%2C';
+    } else {
+      trackIDsURLString += playlistTrackIDs[i];
+    }
+  }
+  data.finalTrackIDsURLString = trackIDsURLString;
+}
+
 function clearAllData() {
   data.genre = '';
   data.workoutMode = '';
   data.duration = '';
   data.playlistTrackIDs = [];
   data.playlistName = '';
+  data.finalTrackIDsURLString = '';
+  data.finalPlaylistCreationURLString = '';
+  data.playlistSongList = [];
+  data.playlistInfoList = {};
+  data.playlistID = '';
   data.APIData = {
     catPlaylists: {},
     allSongs: [],
