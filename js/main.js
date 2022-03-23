@@ -294,9 +294,6 @@ function createPlayListIDList(trackList, workoutMode, duration) {
 
   var potentialPlaylistTracks;
   var allPotentialPlaylists;
-  var potentialPlaylistTotalDuration;
-  var playlistDurationDeviation;
-  var potentialPlaylistObject;
   var thirdLength;
   var numSongs;
   var length;
@@ -325,17 +322,8 @@ function createPlayListIDList(trackList, workoutMode, duration) {
         randomIndex = Math.floor(Math.random() * length);
         potentialPlaylistTracks.push(choppedTracks[j][randomIndex]);
       }
-      potentialPlaylistTotalDuration = 0;
-      for (var k = 0; k < potentialPlaylistTracks.length; k++) {
-        potentialPlaylistTotalDuration += potentialPlaylistTracks[k].duration_ms;
-      }
-      playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
-      potentialPlaylistObject = {
-        tracks: potentialPlaylistTracks,
-        totalDuration: potentialPlaylistTotalDuration / 60000,
-        deviation: playlistDurationDeviation / 60000
-      };
-      allPotentialPlaylists.push(potentialPlaylistObject);
+
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
     }
   }
 
@@ -352,17 +340,7 @@ function createPlayListIDList(trackList, workoutMode, duration) {
       var topThirdListShuffled = shuffle(topThirdList);
       potentialPlaylistTracks = topThirdListShuffled.slice(0, numSongs);
 
-      potentialPlaylistTotalDuration = 0;
-      for (var q = 0; q < potentialPlaylistTracks.length; q++) {
-        potentialPlaylistTotalDuration += potentialPlaylistTracks[q].duration_ms;
-      }
-      playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
-      potentialPlaylistObject = {
-        tracks: potentialPlaylistTracks,
-        totalDuration: potentialPlaylistTotalDuration / 60000,
-        deviation: playlistDurationDeviation / 60000
-      };
-      allPotentialPlaylists.push(potentialPlaylistObject);
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
     }
 
   }
@@ -380,17 +358,7 @@ function createPlayListIDList(trackList, workoutMode, duration) {
       var bottomThirdListShuffled = shuffle(bottomThirdList);
       potentialPlaylistTracks = bottomThirdListShuffled.slice(0, numSongs);
 
-      potentialPlaylistTotalDuration = 0;
-      for (var s = 0; s < potentialPlaylistTracks.length; s++) {
-        potentialPlaylistTotalDuration += potentialPlaylistTracks[s].duration_ms;
-      }
-      playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
-      potentialPlaylistObject = {
-        tracks: potentialPlaylistTracks,
-        totalDuration: potentialPlaylistTotalDuration / 60000,
-        deviation: playlistDurationDeviation / 60000
-      };
-      allPotentialPlaylists.push(potentialPlaylistObject);
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
     }
 
   }
@@ -434,6 +402,20 @@ function shuffle(array) {
   }
 
   return array;
+}
+
+function createPotentialPlaylistObject(potentialPlaylistTracks, duration) {
+  var potentialPlaylistTotalDuration = 0;
+  for (var i = 0; i < potentialPlaylistTracks.length; i++) {
+    potentialPlaylistTotalDuration += potentialPlaylistTracks[i].duration_ms;
+  }
+  var playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
+  var potentialPlaylistObject = {
+    tracks: potentialPlaylistTracks,
+    totalDuration: potentialPlaylistTotalDuration / 60000,
+    deviation: playlistDurationDeviation / 60000
+  };
+  return potentialPlaylistObject;
 }
 
 var $selectionContainers = document.querySelectorAll('.selection-container');
