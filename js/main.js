@@ -571,6 +571,24 @@ $backArrow.addEventListener('click', function (event) {
     canSelect = true;
     goodToProceed = false;
   }
+  if ($backArrow.getAttribute('data-type') === 'mixit') {
+    data.view = 'duration';
+    openDurationPage();
+    data.duration = '';
+    data.playlistTrackIDs = [];
+    data.playlistName = '';
+    data.finalTrackIDsURLString = '';
+    data.finalPlaylistCreationURLString = '';
+    data.playlistSongList = [];
+    data.playlistInfoList = {};
+    data.playlistID = '';
+    $selected = document.querySelector('.selected');
+    if ($selected) {
+      $selected.classList.remove('selected');
+    }
+    canSelect = true;
+    goodToProceed = false;
+  }
 });
 
 // SPOTIFY API REQUESTS //
