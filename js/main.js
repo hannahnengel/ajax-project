@@ -150,6 +150,28 @@ function openMixItPage() {
   populateSongList();
 }
 
+function openUploadPage() {
+  data.view = 'upload';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'upload');
+    if (a.classList.contains('checkmark-a')) {
+      a.classList.add('class', 'hidden');
+    }
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'upload') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
 window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'welcome-prelogin' || data.view === 'welcome-postlogin') {
     openWelcomeHeader();
@@ -177,6 +199,10 @@ window.addEventListener('DOMContentLoaded', function (event) {
 
   if (data.view === 'mixit') {
     openMixItPage();
+  }
+
+  if (data.view === 'upload') {
+    openUploadPage();
   }
 });
 
@@ -207,13 +233,22 @@ $startOverButton.addEventListener('click', function (event) {
 var $signInButton = document.querySelector('.signin');
 var $createPlaylistButton = document.querySelector('.createPlaylist');
 var $createPlaylistButton2 = document.querySelector('.createPlaylist2');
+var $spotifyButton = document.querySelector('.spotify-button');
+var $cancelButton = document.querySelector('.form-button-pink');
+
+$spotifyButton.addEventListener('click', openModal);
+$cancelButton.addEventListener('click', hideModal);
 
 $signInButton.addEventListener('mouseover', whiteLogoHover);
 $signInButton.addEventListener('mouseout', blackSpotifyLogo);
+$spotifyButton.addEventListener('mouseover', whiteLogoHover);
+$spotifyButton.addEventListener('mouseout', blackSpotifyLogo);
+
 $createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
 $createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
 $createPlaylistButton2.addEventListener('mouseover', whiteLogoHover);
 $createPlaylistButton2.addEventListener('mouseout', blackSpotifyLogo);
+$createPlaylistButton2.addEventListener('click', openUploadPage);
 
 $createPlaylistButton.addEventListener('click', function (event) {
   openGenrePage();
@@ -224,6 +259,10 @@ function whiteLogoHover(event) {
   if (logoImg !== null) {
     logoImg.setAttribute('src', 'images/Spotify-Logo-White.png');
   }
+  var logoImg2 = $spotifyButton.querySelector('.img-logo');
+  if (logoImg !== null) {
+    logoImg2.setAttribute('src', 'images/Spotify-Logo-White.png');
+  }
 
   var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
   if (headphoneImg !== null) {
@@ -233,11 +272,17 @@ function whiteLogoHover(event) {
   if (headphoneImg2 !== null) {
     headphoneImg2.setAttribute('src', 'images/Headphones-icon-white.png');
   }
+
 }
 function blackSpotifyLogo(event) {
   var logoImg = $signInButton.querySelector('.img-logo');
   if (logoImg !== null) {
     logoImg.setAttribute('src', 'images/Spotify-Logo-Black.png');
+  }
+
+  var logoImg2 = $spotifyButton.querySelector('.img-logo');
+  if (logoImg !== null) {
+    logoImg2.setAttribute('src', 'images/Spotify-Logo-Black.png');
   }
 
   var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
@@ -253,9 +298,9 @@ function blackSpotifyLogo(event) {
 
 function signedInAs() {
   var $userDisplayNameSpan = document.querySelector('span.user-display-name');
-  if ($userDisplayNameSpan !== null) {
-    $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
-  }
+  var $userDisplayNameSpan2 = document.querySelector('span.user-display-name2');
+  $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
+  $userDisplayNameSpan2.innerHTML = localStorage.getItem('user_ID');
 }
 signedInAs();
 var minSongLength = 1.0;
@@ -592,6 +637,12 @@ $backArrow.addEventListener('click', function (event) {
     canSelect = true;
     goodToProceed = false;
   }
+
+  if ($backArrow.getAttribute('data-type') === 'upload') {
+    data.view = 'mixit';
+    openMixItPage();
+    data.playlistName = '';
+  }
 });
 
 // SPOTIFY API REQUESTS //
@@ -834,4 +885,16 @@ function populateSongList() {
 function clearDOMSongList() {
   var $songList = document.querySelector('ol.song-list');
   $songList.innerHTML = '';
+}
+
+var $modal = document.querySelector('.modal');
+var $blackOverlay = document.querySelector('.black-overlay');
+function hideModal() {
+  $modal.classList.add('hidden');
+  $blackOverlay.classList.add('hidden');
+}
+
+function openModal() {
+  $modal.classList.remove('hidden');
+  $blackOverlay.classList.remove('hidden');
 }
