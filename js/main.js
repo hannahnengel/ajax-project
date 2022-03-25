@@ -234,6 +234,10 @@ var $signInButton = document.querySelector('.signin');
 var $createPlaylistButton = document.querySelector('.createPlaylist');
 var $createPlaylistButton2 = document.querySelector('.createPlaylist2');
 var $spotifyButton = document.querySelector('.spotify-button');
+var $cancelButton = document.querySelector('.form-button-pink');
+
+$spotifyButton.addEventListener('click', openModal);
+$cancelButton.addEventListener('click', hideModal);
 
 $signInButton.addEventListener('mouseover', whiteLogoHover);
 $signInButton.addEventListener('mouseout', blackSpotifyLogo);
@@ -874,4 +878,16 @@ function populateSongList() {
 function clearDOMSongList() {
   var $songList = document.querySelector('ol.song-list');
   $songList.innerHTML = '';
+}
+
+var $modal = document.querySelector('.modal');
+var $blackOverlay = document.querySelector('.black-overlay');
+function hideModal() {
+  $modal.classList.add('hidden');
+  $blackOverlay.classList.add('hidden');
+}
+
+function openModal() {
+  $modal.classList.remove('hidden');
+  $blackOverlay.classList.remove('hidden');
 }
