@@ -1,4 +1,3 @@
-
 /* global refreshAccessToken */
 /* exported refreshAccessToken */
 /* global data */
@@ -69,6 +68,7 @@ function openGenrePage() {
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'genre');
+    a.classList.remove('hidden');
   }
   for (const page of $pages) {
     if (page.getAttribute('data-view') === 'genre') {
@@ -89,6 +89,7 @@ function openWorkoutPage() {
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'workout-mode');
+    a.classList.remove('hidden');
   }
 
   for (const page of $pages) {
@@ -110,6 +111,7 @@ function openDurationPage() {
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'duration');
+    a.classList.remove('hidden');
   }
 
   for (const page of $pages) {
@@ -121,6 +123,31 @@ function openDurationPage() {
       page.classList.remove('active');
     }
   }
+}
+
+function openMixItPage() {
+  canSelect = false;
+  goodToProceed = true;
+  data.view = 'mixit';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'mixit');
+    if (a.classList.contains('checkmark-a')) {
+      a.classList.add('class', 'hidden');
+    }
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'mixit') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+  populateSongList();
 }
 
 window.addEventListener('DOMContentLoaded', function (event) {
@@ -148,6 +175,9 @@ window.addEventListener('DOMContentLoaded', function (event) {
     openDurationPage();
   }
 
+  if (data.view === 'mixit') {
+    openMixItPage();
+  }
 });
 
 var $body = document.querySelector('body');
@@ -171,15 +201,19 @@ $startOverButton.addEventListener('click', function (event) {
     $selected.classList.remove('selected');
   }
   clearAllData();
+  clearDOMSongList();
 });
 
 var $signInButton = document.querySelector('.signin');
 var $createPlaylistButton = document.querySelector('.createPlaylist');
+var $createPlaylistButton2 = document.querySelector('.createPlaylist2');
 
 $signInButton.addEventListener('mouseover', whiteLogoHover);
 $signInButton.addEventListener('mouseout', blackSpotifyLogo);
 $createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
 $createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
+$createPlaylistButton2.addEventListener('mouseover', whiteLogoHover);
+$createPlaylistButton2.addEventListener('mouseout', blackSpotifyLogo);
 
 $createPlaylistButton.addEventListener('click', function (event) {
   openGenrePage();
@@ -195,6 +229,10 @@ function whiteLogoHover(event) {
   if (headphoneImg !== null) {
     headphoneImg.setAttribute('src', 'images/Headphones-icon-white.png');
   }
+  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
+  if (headphoneImg2 !== null) {
+    headphoneImg2.setAttribute('src', 'images/Headphones-icon-white.png');
+  }
 }
 function blackSpotifyLogo(event) {
   var logoImg = $signInButton.querySelector('.img-logo');
@@ -206,6 +244,11 @@ function blackSpotifyLogo(event) {
   if (headphoneImg !== null) {
     headphoneImg.setAttribute('src', 'images/Headphones-icon-black.png');
   }
+
+  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
+  if (headphoneImg2 !== null) {
+    headphoneImg2.setAttribute('src', 'images/Headphones-icon-black.png');
+  }
 }
 
 function signedInAs() {
@@ -215,7 +258,6 @@ function signedInAs() {
   }
 }
 signedInAs();
-
 var minSongLength = 1.0;
 var maxSongLength = 3.6;
 minSongLength = minSongLength * 60000;
@@ -531,6 +573,25 @@ $backArrow.addEventListener('click', function (event) {
     canSelect = true;
     goodToProceed = false;
   }
+  if ($backArrow.getAttribute('data-type') === 'mixit') {
+    data.view = 'duration';
+    openDurationPage();
+    clearDOMSongList();
+    data.duration = '';
+    data.playlistTrackIDs = [];
+    data.playlistName = '';
+    data.finalTrackIDsURLString = '';
+    data.finalPlaylistCreationURLString = '';
+    data.playlistSongList = [];
+    data.playlistInfoList = {};
+    data.playlistID = '';
+    $selected = document.querySelector('.selected');
+    if ($selected) {
+      $selected.classList.remove('selected');
+    }
+    canSelect = true;
+    goodToProceed = false;
+  }
 });
 
 // SPOTIFY API REQUESTS //
@@ -715,7 +776,7 @@ function handleTracks() {
       };
       data.playlistSongList.push(obj);
     }
-    // go to the mixit page
+    openMixItPage();
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
@@ -754,4 +815,23 @@ function clearAllData() {
   };
   data.FilteredData.audioFeaturesMasterListFiltered = [];
   data.playlistItems = {};
+}
+
+function populateSongList() {
+  var playlistSongList = data.playlistSongList;
+  var $songList = document.querySelector('ol.song-list');
+
+  for (var i = 0; i < playlistSongList.length; i++) {
+    var artist = playlistSongList[i].artist;
+    var trackName = playlistSongList[i].trackName;
+
+    var li = document.createElement('li');
+    li.innerHTML = `Song: ${trackName}, Artist: ${artist}`;
+    $songList.appendChild(li);
+  }
+}
+
+function clearDOMSongList() {
+  var $songList = document.querySelector('ol.song-list');
+  $songList.innerHTML = '';
 }

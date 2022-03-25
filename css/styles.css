@@ -36,7 +36,7 @@ button {
 }
 
 .button-white {
-  background-color: #fff;
+  background-color: #rgb(255 255 255 / 40%);
   opacity: 0.9;
   color: black;
   font-size: 1.18rem;
@@ -82,6 +82,11 @@ button {
   background-color: rgb(255 255 255 / 40%);
 }
 
+.light-grey {
+  background-color: rgb(255 255 255 / 40%);
+  border-radius: 4px;
+}
+
 .top-margin-100 {
   margin-top: 6.25rem;
 }
@@ -121,6 +126,11 @@ a > img:hover {
   width: 2.8rem;
   height: auto;
   cursor: pointer;
+}
+
+li {
+  text-align: start;
+  padding: 0.2rem;
 }
 
 .hidden {
