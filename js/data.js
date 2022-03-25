@@ -9,9 +9,13 @@ var data = {
   genre: '',
   workoutMode: '',
   duration: '',
-  playlistItems: {},
-  playlistTracks: [],
+  playlistTrackIDs: [],
+  finalTrackIDsURLString: '',
+  finalPlaylistCreationURLString: '',
+  playlistInfoList: {},
+  playlistSongList: [],
   playlistName: '',
+  playlistID: '',
   APIData: {
     catPlaylists: {},
     allSongs: [],
@@ -19,7 +23,7 @@ var data = {
     trackIDsMaster: []
   },
   FilteredData: {
-    audioFeaturesMasterListFiltered: []
+    audioFeaturesMasterList: []
   }
 };
 

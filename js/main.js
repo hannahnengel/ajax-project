@@ -62,6 +62,8 @@ function openWelcomePostLoginPage() {
 }
 
 function openGenrePage() {
+  canSelect = true;
+  goodToProceed = false;
   data.view = 'genre';
   openSelectionHeader();
 
@@ -80,6 +82,8 @@ function openGenrePage() {
 }
 
 function openWorkoutPage() {
+  canSelect = true;
+  goodToProceed = false;
   data.view = 'workout-mode';
   openSelectionHeader();
 
@@ -89,6 +93,27 @@ function openWorkoutPage() {
 
   for (const page of $pages) {
     if (page.getAttribute('data-view') === 'workout-mode') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openDurationPage() {
+  canSelect = true;
+  goodToProceed = false;
+  data.view = 'duration';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'duration');
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'duration') {
       page.classList.remove('hidden');
       page.classList.add('active');
     } else {
@@ -119,6 +144,9 @@ window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'workout-mode') {
     openWorkoutPage();
   }
+  if (data.view === 'duration') {
+    openDurationPage();
+  }
 
 });
 
@@ -138,8 +166,6 @@ var $startOverButton = document.querySelector('.start-over');
 var $selected = document.querySelector('.selected');
 $startOverButton.addEventListener('click', function (event) {
   $selected = document.querySelector('.selected');
-  goodToProceed = false;
-  canSelect = true;
   openWelcomePostLoginPage();
   if ($selected !== null) {
     $selected.classList.remove('selected');
@@ -239,8 +265,157 @@ if ($aTagCheckmark) {
       }
       data.FilteredData.audioFeaturesMasterListFiltered.sort((a, b) => (a.customValue - b.customValue));
 
+      openDurationPage();
+    } else if ((goodToProceed === true) && ($aTagCheckmark.getAttribute('data-type') === 'duration')) {
+      createPlayListIDList(data.FilteredData.audioFeaturesMasterListFiltered, data.workoutMode, data.duration);
     }
   });
+}
+
+function createPlayListIDList(trackList, workoutMode, duration) {
+
+  var durationString = duration.slice(0, 2);
+  duration = parseInt(durationString) * 60000;
+
+  var sectionBuffer;
+  if (durationString === '15') {
+    sectionBuffer = 1;
+  } else if (durationString === '30') {
+    sectionBuffer = 2;
+  } else if (durationString === '45') {
+    sectionBuffer = 3;
+  } else if (durationString === '60') {
+    sectionBuffer = 4;
+  } else if (durationString === '90') {
+    sectionBuffer = 6;
+  }
+  var numSections = Math.ceil(duration / maxSongLength) + sectionBuffer;
+  var randomIndex;
+
+  var potentialPlaylistTracks;
+  var allPotentialPlaylists;
+  var thirdLength;
+  var numSongs;
+  var length;
+  var songsPerSection;
+  var tempList;
+  var choppedTracks;
+
+  if (workoutMode === 'ramp-up' || workoutMode === 'ramp-up-n-down') {
+    songsPerSection = Math.floor(trackList.length / numSections);
+
+    tempList = [];
+    choppedTracks = [];
+    for (var i = 0; i < trackList.length; i++) {
+      tempList.push(trackList[i]);
+      if ((i + 1) % songsPerSection === 0) {
+        choppedTracks.push(tempList);
+        tempList = [];
+      }
+    }
+
+    allPotentialPlaylists = [];
+    for (var l = 0; l < 100; l++) {
+      potentialPlaylistTracks = [];
+      for (var j = 0; j < choppedTracks.length; j++) {
+        length = choppedTracks[j].length;
+        randomIndex = Math.floor(Math.random() * length);
+        potentialPlaylistTracks.push(choppedTracks[j][randomIndex]);
+      }
+
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
+    }
+  }
+
+  if (workoutMode === 'hardcore') {
+    thirdLength = Math.floor(trackList.length / 3);
+    var topThirdList = [];
+    for (var o = trackList.length - thirdLength; o < trackList.length; o++) {
+      topThirdList.push(trackList[o]);
+    }
+    numSongs = numSections;
+
+    allPotentialPlaylists = [];
+    for (var p = 0; p < 100; p++) {
+      var topThirdListShuffled = shuffle(topThirdList);
+      potentialPlaylistTracks = topThirdListShuffled.slice(0, numSongs);
+
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
+    }
+
+  }
+
+  if (workoutMode === 'chill') {
+    thirdLength = Math.floor(trackList.length / 3);
+    var bottomThirdList = [];
+    for (var t = 0; t < thirdLength; t++) {
+      bottomThirdList.push(trackList[t]);
+    }
+    numSongs = numSections;
+
+    allPotentialPlaylists = [];
+    for (var r = 0; r < 100; r++) {
+      var bottomThirdListShuffled = shuffle(bottomThirdList);
+      potentialPlaylistTracks = bottomThirdListShuffled.slice(0, numSongs);
+
+      allPotentialPlaylists.push(createPotentialPlaylistObject(potentialPlaylistTracks, duration));
+    }
+
+  }
+
+  allPotentialPlaylists.sort((a, b) => (a.deviation - b.deviation));
+  var chosenPlaylistInfo = allPotentialPlaylists[0].tracks;
+  var chosenPlaylistIDs = [];
+
+  for (var n = 0; n < chosenPlaylistInfo.length; n++) {
+    chosenPlaylistIDs.push(chosenPlaylistInfo[n].id);
+  }
+
+  if (workoutMode === 'ramp-up-n-down') {
+    var list1 = [];
+    var list2 = [];
+    for (var u = 0; u < chosenPlaylistIDs.length; u++) {
+      if (u % 2 === 0) {
+        list1.push(chosenPlaylistIDs[u]);
+      } else {
+        list2.push(chosenPlaylistIDs[u]);
+      }
+    }
+    list2.reverse();
+    chosenPlaylistIDs = list1.concat(list2);
+  }
+
+  data.playlistTrackIDs = chosenPlaylistIDs;
+  createFinalTrackIDsURLString(data.playlistTrackIDs);
+  getTracks(data.finalTrackIDsURLString);
+}
+
+function shuffle(array) {
+  let currentIndex = array.length; let randomIndex;
+  while (currentIndex !== 0) {
+
+    randomIndex = Math.floor(Math.random() * currentIndex);
+    currentIndex--;
+
+    [array[currentIndex], array[randomIndex]] = [
+      array[randomIndex], array[currentIndex]];
+  }
+
+  return array;
+}
+
+function createPotentialPlaylistObject(potentialPlaylistTracks, duration) {
+  var potentialPlaylistTotalDuration = 0;
+  for (var i = 0; i < potentialPlaylistTracks.length; i++) {
+    potentialPlaylistTotalDuration += potentialPlaylistTracks[i].duration_ms;
+  }
+  var playlistDurationDeviation = Math.abs(potentialPlaylistTotalDuration - duration);
+  var potentialPlaylistObject = {
+    tracks: potentialPlaylistTracks,
+    totalDuration: potentialPlaylistTotalDuration / 60000,
+    deviation: playlistDurationDeviation / 60000
+  };
+  return potentialPlaylistObject;
 }
 
 var $selectionContainers = document.querySelectorAll('.selection-container');
@@ -263,6 +438,11 @@ function toggleSelectItem(event) {
         var workoutMode = $selectButton.getAttribute('data-value');
         data.workoutMode = workoutMode;
       }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        var duration = $selectButton.getAttribute('data-value');
+        data.duration = duration;
+      }
+
       $selectButton.classList.add('selected');
       canSelect = false;
     } else if ((event.target === $selectButton) && ($selectButton.classList.contains('selected'))) {
@@ -275,6 +455,10 @@ function toggleSelectItem(event) {
       if (event.target.getAttribute('data-type') === 'workout-mode') {
         data.workoutMode = '';
       }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        data.duration = '';
+      }
+
     }
     if ($selectButton !== event.target && $selectButton.classList.contains('selected')) {
       $selectButton.style.backgroundColor = '';
@@ -283,6 +467,9 @@ function toggleSelectItem(event) {
       }
       if (event.target.getAttribute('data-type') === 'workout-mode') {
         data.workoutMode = '';
+      }
+      if (event.target.getAttribute('data-type') === 'duration') {
+        data.duration = '';
       }
       $selectButton.classList.remove('selected');
       canSelect = true;
@@ -298,7 +485,9 @@ function toggleSelectItem(event) {
 var $backArrow = document.querySelector('.backArrow');
 $backArrow.addEventListener('click', function (event) {
   $selected = document.querySelector('.selected');
-  $selected.classList.remove('selected');
+  if ($selected) {
+    $selected.classList.remove('selected');
+  }
 
   if ($backArrow.getAttribute('data-type') === 'genre') {
     openWelcomePostLoginPage();
@@ -317,7 +506,26 @@ $backArrow.addEventListener('click', function (event) {
     };
     data.FilteredData.audioFeaturesMasterListFiltered = [];
     $selected = document.querySelector('.selected');
-    if ($selected !== null) {
+    if ($selected) {
+      $selected.classList.remove('selected');
+    }
+    canSelect = true;
+    goodToProceed = false;
+  }
+  if ($backArrow.getAttribute('data-type') === 'duration') {
+    data.view = 'workout-mode';
+    openWorkoutPage();
+    data.duration = '';
+    data.workoutMode = '';
+    data.playlistTrackIDs = [];
+    data.playlistName = '';
+    data.finalTrackIDsURLString = '';
+    data.finalPlaylistCreationURLString = '';
+    data.playlistSongList = [];
+    data.playlistInfoList = {};
+    data.playlistID = '';
+    $selected = document.querySelector('.selected');
+    if ($selected) {
       $selected.classList.remove('selected');
     }
     canSelect = true;
@@ -479,12 +687,65 @@ function createTrackIDsURLString(trackIDsMaster) {
   data.APIData.trackIDsURLString = trackIDsURLString;
 }
 
+var TRACKS = '';
+function getTracks(trackIDsURLString) {
+  TRACKS = 'https://api.spotify.com/v1/tracks?ids=' + trackIDsURLString;
+  callApi('GET', TRACKS, null, handleTracks);
+}
+
+function handleTracks() {
+  if (this.status === 200) {
+    data.playlistInfoList = {};
+    data.playlistInfoList = JSON.parse(this.responseText);
+
+    var artist;
+    var trackName;
+    var id;
+    var obj;
+    data.playlistSongList = [];
+    for (var i = 0; i < data.playlistInfoList.tracks.length; i++) {
+      artist = data.playlistInfoList.tracks[i].artists[0].name;
+      trackName = data.playlistInfoList.tracks[i].name;
+      id = data.playlistInfoList.tracks[i].id;
+
+      obj = {
+        artist: artist,
+        trackName: trackName,
+        id: id
+      };
+      data.playlistSongList.push(obj);
+    }
+    // go to the mixit page
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+
+function createFinalTrackIDsURLString(playlistTrackIDs) {
+  trackIDsURLString = '';
+  for (var i = 0; i < playlistTrackIDs.length; i++) {
+    if (i !== (playlistTrackIDs.length - 1)) {
+      trackIDsURLString += playlistTrackIDs[i] + '%2C';
+    } else {
+      trackIDsURLString += playlistTrackIDs[i];
+    }
+  }
+  data.finalTrackIDsURLString = trackIDsURLString;
+}
+
 function clearAllData() {
   data.genre = '';
   data.workoutMode = '';
   data.duration = '';
-  data.playlistTracks = [];
+  data.playlistTrackIDs = [];
   data.playlistName = '';
+  data.finalTrackIDsURLString = '';
+  data.finalPlaylistCreationURLString = '';
+  data.playlistSongList = [];
+  data.playlistInfoList = {};
+  data.playlistID = '';
   data.APIData = {
     catPlaylists: {},
     allSongs: [],
