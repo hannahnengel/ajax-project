@@ -222,7 +222,7 @@ input:focus::placeholder {
   z-index: 1;
 }
 
-.modal {
+/* .modal {
   width: 600px;
   height: 375px;
   position: fixed;
@@ -230,4 +230,4 @@ input:focus::placeholder {
   left: 50%;
   transform: translate(-50%, -130%);
   z-index: 2;
-}
+} */
