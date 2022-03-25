@@ -248,6 +248,7 @@ $createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
 $createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
 $createPlaylistButton2.addEventListener('mouseover', whiteLogoHover);
 $createPlaylistButton2.addEventListener('mouseout', blackSpotifyLogo);
+$createPlaylistButton2.addEventListener('click', openUploadPage);
 
 $createPlaylistButton.addEventListener('click', function (event) {
   openGenrePage();
@@ -635,6 +636,12 @@ $backArrow.addEventListener('click', function (event) {
     }
     canSelect = true;
     goodToProceed = false;
+  }
+
+  if ($backArrow.getAttribute('data-type') === 'upload') {
+    data.view = 'mixit';
+    openMixItPage();
+    data.playlistName = '';
   }
 });
 
