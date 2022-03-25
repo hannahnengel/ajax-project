@@ -47,7 +47,9 @@
   }
 
   .mixit-content {
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: scroll;
   }
 
   .select-button-div {
@@ -82,10 +84,13 @@
     align-items: flex-start;
     justify-content: flex-start;
     width: 730px;
+    overflow-y: scroll;
   }
 
   .mixit-content {
-    justify-content: center;
+    justify-content: flex-start;
+    align-items: flex-start;
+    overflow-y: scroll;
     margin: 0 7rem;
   }
 

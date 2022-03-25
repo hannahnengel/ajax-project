@@ -147,6 +147,7 @@ function openMixItPage() {
       page.classList.remove('active');
     }
   }
+  populateSongList();
 }
 
 window.addEventListener('DOMContentLoaded', function (event) {
@@ -200,6 +201,7 @@ $startOverButton.addEventListener('click', function (event) {
     $selected.classList.remove('selected');
   }
   clearAllData();
+  clearDOMSongList();
 });
 
 var $signInButton = document.querySelector('.signin');
@@ -574,6 +576,7 @@ $backArrow.addEventListener('click', function (event) {
   if ($backArrow.getAttribute('data-type') === 'mixit') {
     data.view = 'duration';
     openDurationPage();
+    clearDOMSongList();
     data.duration = '';
     data.playlistTrackIDs = [];
     data.playlistName = '';
@@ -812,4 +815,23 @@ function clearAllData() {
   };
   data.FilteredData.audioFeaturesMasterListFiltered = [];
   data.playlistItems = {};
+}
+
+function populateSongList() {
+  var playlistSongList = data.playlistSongList;
+  var $songList = document.querySelector('ol.song-list');
+
+  for (var i = 0; i < playlistSongList.length; i++) {
+    var artist = playlistSongList[i].artist;
+    var trackName = playlistSongList[i].trackName;
+
+    var li = document.createElement('li');
+    li.innerHTML = `Song: ${trackName}, Artist: ${artist}`;
+    $songList.appendChild(li);
+  }
+}
+
+function clearDOMSongList() {
+  var $songList = document.querySelector('ol.song-list');
+  $songList.innerHTML = '';
 }
