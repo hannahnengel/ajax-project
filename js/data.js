@@ -158,8 +158,7 @@ function callApi(method, url, body, callback) {
 
 function signedInAs() {
   var $userDisplayNameSpan = document.querySelector('span.user-display-name');
-  var userID = localStorage.getItem('user_ID');
-  if ($userDisplayNameSpan !== null) {
-    $userDisplayNameSpan.innerHTML = userID;
-  }
+  var $userDisplayNameSpan2 = document.querySelector('span.user-display-name2');
+  $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
+  $userDisplayNameSpan2.innerHTML = localStorage.getItem('user_ID');
 }

@@ -39,152 +39,187 @@
       </div>
     </div>
   </header>
-  <main class="container">
-    <div data-view="welcome-header" class="header active">
-      <div class="row">
-        <div class="column-full">
-          <p>Get your custom workout playlist to pump it up or tone it down</p>
+  <main>
+    <div class="black-overlay hidden"></div>
+    <div class="container">
+      <div data-view="welcome-header" class="header active">
+        <div class="row">
+          <div class="column-full">
+            <p>Get your custom workout playlist to pump it up or tone it down</p>
+          </div>
         </div>
-      </div>
-      <div data-view="welcome-prelogin" class="row page active">
-        <div class="column-full top-margin-100">
-          <h2 class="pink-text">Sign in to get started</h2>
-          <button data-view="prelogin" onclick="requestAuthorization()" class="button-white top-margin-10 signin"><img
-              class="img-logo padding-10" src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Sign in with
-            Spotify</button>
+        <div data-view="welcome-prelogin" class="row page active">
+          <div class="column-full top-margin-100">
+            <h2 class="pink-text">Sign in to get started</h2>
+            <button data-view="prelogin" onclick="requestAuthorization()" class="button-white top-margin-10 signin"><img
+                class="img-logo padding-10" src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Sign in with
+              Spotify</button>
+          </div>
         </div>
-      </div>
-      <div data-view="welcome-postlogin" class="row page hidden">
-        <div class="column-full top-margin-100">
-          <button class="button-white top-margin-10 bottom-margin-20 createPlaylist"><img
-              class="headphone-img padding-10" src="images/Headphones-icon-black.png" alt="Headphones Icon">Create
-            Playlist</button>
-          <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as
-            <span class="user-display-name" style="text-decoration: underline;">Hannah</span>.</p>
-          <p class="small-text">Not you? <a class="pink-text" href="">Click here to sign in to Spotify</a></p>
-        </div>
-      </div>
-    </div>
-    <div data-view="genre" class="page hidden">
-      <div class="row">
-        <div class="column-full">
-          <h1>Select a Genre</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="selection-container genre">
-          <div class="select-button-div">
-            <button data-type="genre" data-value="workout" class="select-button">Workout</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="toplists" class="select-button">Top Hits</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="pop" class="select-button">Pop</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="hiphop" class="select-button">Hip-Hop</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="rnb" class="select-button">RnB</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="rock" class="select-button">Rock</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="indie_alt" class="select-button">Indie</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="chill" class="select-button">Chill</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="anime" class="select-button">Anime</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="genre" data-value="edm_dance" class="select-button">EDM</button>
+        <div data-view="welcome-postlogin" class="row page hidden">
+          <div class="column-full top-margin-100">
+            <button class="button-white top-margin-10 bottom-margin-20 createPlaylist"><img
+                class="headphone-img padding-10" src="images/Headphones-icon-black.png" alt="Headphones Icon">Create
+              Playlist</button>
+            <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as
+              <span class="user-display-name" style="text-decoration: underline;">Hannah</span>.</p>
+            <p class="small-text">Not you? <a class="pink-text" href="">Click here to sign in to Spotify</a></p>
           </div>
         </div>
       </div>
-    </div>
-    <div data-view="workout-mode" class="page hidden">
-      <div class="row">
-        <div class="column-full">
-          <h1>Select a Workout Mode</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="selection-container workout-mode">
-          <div class="select-button-div">
-            <button data-type="workout-mode" data-value="ramp-up" class="select-button">Ramp Up</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="workout-mode" data-value="ramp-up-n-down" class="select-button">Ramp Up &amp;
-              Down</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="workout-mode" data-value="hardcore" class="select-button">Hardcore</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="workout-mode" data-value="chill" class="select-button">Chill</button>
+      <div data-view="genre" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Select a Genre</h1>
           </div>
         </div>
-      </div>
-    </div>
-    <div data-view="duration" class="page hidden">
-      <div class="row">
-        <div class="column-full">
-          <h1>Select a Duration</h1>
-        </div>
-      </div>
-      <div class="row">
-        <div class="selection-container duration">
-          <div class="select-button-div">
-            <button data-type="duration" data-value="15-mins" class="select-button">15 Minutes</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="duration" data-value="30-mins" class="select-button">30 Minutes</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="duration" data-value="45-mins" class="select-button">45 Minutes</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="duration" data-value="60-mins" class="select-button">60 Minutes</button>
-          </div>
-          <div class="select-button-div">
-            <button data-type="duration" data-value="90-mins" class="select-button">90 Minutes</button>
+        <div class="row">
+          <div class="selection-container genre">
+            <div class="select-button-div">
+              <button data-type="genre" data-value="workout" class="select-button">Workout</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="toplists" class="select-button">Top Hits</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="pop" class="select-button">Pop</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="hiphop" class="select-button">Hip-Hop</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="rnb" class="select-button">RnB</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="rock" class="select-button">Rock</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="indie_alt" class="select-button">Indie</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="chill" class="select-button">Chill</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="anime" class="select-button">Anime</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="genre" data-value="edm_dance" class="select-button">EDM</button>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div data-view="mixit" class="page hidden">
-      <div class="row">
-        <div class="column-full">
-          <h1>Mix It!</h1>
+      <div data-view="workout-mode" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Select a Workout Mode</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="selection-container workout-mode">
+            <div class="select-button-div">
+              <button data-type="workout-mode" data-value="ramp-up" class="select-button">Ramp Up</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="workout-mode" data-value="ramp-up-n-down" class="select-button">Ramp Up &amp;
+                Down</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="workout-mode" data-value="hardcore" class="select-button">Hardcore</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="workout-mode" data-value="chill" class="select-button">Chill</button>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="row">
-        <div class="selection-container mixit-content light-grey">
-          <ol class="song-list">
+      <div data-view="duration" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Select a Duration</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="selection-container duration">
+            <div class="select-button-div">
+              <button data-type="duration" data-value="15-mins" class="select-button">15 Minutes</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="duration" data-value="30-mins" class="select-button">30 Minutes</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="duration" data-value="45-mins" class="select-button">45 Minutes</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="duration" data-value="60-mins" class="select-button">60 Minutes</button>
+            </div>
+            <div class="select-button-div">
+              <button data-type="duration" data-value="90-mins" class="select-button">90 Minutes</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div data-view="mixit" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Mix It!</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="selection-container mixit-content light-grey">
+            <ol class="song-list">
 
-          </ol>
+            </ol>
+          </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="column-full">
-          <button class="button-white createPlaylist2 top-margin-10 bottom-margin-20"><img
-              class="headphone-img padding-10" src="images/Headphones-icon-black.png" alt="Headphones Icon">Create
-            Playlist</button>
+        <div class="row">
+          <div class="column-full">
+            <button class="button-white createPlaylist2 top-margin-10 bottom-margin-20"><img
+                class="headphone-img padding-10" src="images/Headphones-icon-black.png" alt="Headphones Icon">Create
+              Playlist</button>
+          </div>
         </div>
-      </div>
 
-    </div>
-    <div data-view="selection-header" class="header row hidden">
-      <div class="column-full start-over-div">
-        <button class="start-over"><img class="padding-5" src="images/Undo-white.png" alt="Start Over">Start
-          Over</button>
+      </div>
+      <div data-view="upload" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Upload to Spotify</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column-full">
+            <form class="playlistNameForm">
+              <label for="playlistName"></label>
+              <input class="top-margin-3  bottom-margin-20" type="text" id="playlistName" name="playlistName"
+                placeholder="Name your Playlist" required>
+              <div>
+                <button type="button" class="button-white top-margin-10 bottom-margin-3 spotify-button"><img
+                    class="img-logo padding-10" src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Upload to
+                  Spotify</button>
+              </div>
+              <div class="modal hidden">
+                <h1>Are you Sure?</h1>
+                <p>Continuing will make changes to your Spotify Account!</p>
+                <div><button class="form-button-white top-margin-10 bottom-margin-20">Yes, Upload!</button></div>
+                <div><button class="form-button-pink top-margin-10 bottom-margin-20">No, Cancel</button></div>
+              </div>
+
+            </form>
+            <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as
+              <span class="user-display-name2" style="text-decoration: underline;">Hannah</span>.</p>
+            <p class="small-text">Not you? <a class="pink-text" href="">Click here to sign in to Spotify</a></p>
+          </div>
+        </div>
+      </div>
+      <div data-view="selection-header" class="header row hidden">
+        <div class="column-full start-over-div">
+          <button class="start-over"><img class="padding-5" src="images/Undo-white.png" alt="Start Over">Start
+            Over</button>
+        </div>
       </div>
     </div>
   </main>
+
   <script src="js/data.js"></script>
   <script src="js/main.js"></script>
 </body>
