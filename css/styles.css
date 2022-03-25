@@ -36,7 +36,7 @@ button {
 }
 
 .button-white {
-  background-color: #fff;
+  background-color: #rgb(255 255 255 / 40%);
   opacity: 0.9;
   color: black;
   font-size: 1.18rem;
@@ -80,6 +80,11 @@ button {
 .start-over:hover {
   cursor: pointer;
   background-color: rgb(255 255 255 / 40%);
+}
+
+.light-grey {
+  background-color: rgb(255 255 255 / 40%);
+  border-radius: 4px;
 }
 
 .top-margin-100 {

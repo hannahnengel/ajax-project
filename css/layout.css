@@ -40,6 +40,16 @@
     margin-bottom: 0.2rem;
   }
 
+  .mixit {
+    justify-content: flex-start;
+    height: 480px;
+    width: 335px;
+  }
+
+  .mixit-content {
+    justify-content: center;
+  }
+
   .select-button-div {
     flex-basis: 50%;
   }
@@ -66,6 +76,17 @@
   .genre {
     height: 500px;
     padding: 3rem;
+  }
+
+  .mixit {
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 730px;
+  }
+
+  .mixit-content {
+    justify-content: center;
+    margin: 0 7rem;
   }
 
   .select-button-div {
