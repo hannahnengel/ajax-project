@@ -180,6 +180,7 @@ function openUploadPage() {
 function openSuccessPage() {
   data.view = 'success';
   openSelectionHeader();
+  hideModal();
   openFooter();
   for (const a of $aTags) {
     a.setAttribute('data-type', 'success');
@@ -290,6 +291,21 @@ for (const button of $whiteButtons) {
   button.addEventListener('mouseover', whiteLogoHover);
   button.addEventListener('mouseout', blackLogoHover);
 }
+
+var $createAnother = document.querySelector('.create-another-playlist-button');
+$createAnother.addEventListener('click', function (event) {
+  clearAllData();
+  openWelcomePostLoginPage();
+});
+
+var $playlistNameForm = document.querySelector('.playlistNameForm');
+$playlistNameForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+  $playlistNameForm.elements.name = data.playlistName;
+  // API call to post to Spotify --> callback open Sucess//
+  openSuccessPage();
+
+});
 
 function whiteLogoHover(event) {
   if (event.target.tagName === 'IMG') {
