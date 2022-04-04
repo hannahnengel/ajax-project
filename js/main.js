@@ -48,6 +48,7 @@ function openWelcomePreloginPage() {
 function openWelcomePostLoginPage() {
   data.view = 'welcome-postlogin';
   openWelcomeHeader();
+  openFooter();
 
   for (const page of $pages) {
     if (page.getAttribute('data-view') === 'welcome-postlogin') {
@@ -65,6 +66,7 @@ function openGenrePage() {
   goodToProceed = false;
   data.view = 'genre';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'genre');
@@ -86,6 +88,7 @@ function openWorkoutPage() {
   goodToProceed = false;
   data.view = 'workout-mode';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'workout-mode');
@@ -108,6 +111,7 @@ function openDurationPage() {
   goodToProceed = false;
   data.view = 'duration';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'duration');
@@ -130,6 +134,7 @@ function openMixItPage() {
   goodToProceed = true;
   data.view = 'mixit';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'mixit');
@@ -148,6 +153,64 @@ function openMixItPage() {
     }
   }
   populateSongList();
+}
+
+function openUploadPage() {
+  data.view = 'upload';
+  openSelectionHeader();
+
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'upload');
+    if (a.classList.contains('checkmark-a')) {
+      a.classList.add('class', 'hidden');
+    }
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'upload') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openSuccessPage() {
+  data.view = 'success';
+  openSelectionHeader();
+  openFooter();
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'success');
+    if (!a.classList.contains('pink-text')) {
+      a.classList.add('class', 'hidden');
+    }
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'success') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openFooter() {
+  var $footer = document.querySelector('.footer');
+  var $startOverButtonDiv = document.querySelector('.div-start-over');
+  $footer.classList.remove('hidden');
+  $startOverButtonDiv.classList.add('hidden');
+}
+
+function hideFooter() {
+  var $footer = document.querySelector('.footer');
+  var $startOverButtonDiv = document.querySelector('.div-start-over');
+  $footer.classList.add('hidden');
+  $startOverButtonDiv.classList.remove('hidden');
 }
 
 window.addEventListener('DOMContentLoaded', function (event) {
@@ -178,6 +241,14 @@ window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'mixit') {
     openMixItPage();
   }
+
+  if (data.view === 'upload') {
+    openUploadPage();
+  }
+
+  if (data.view === 'success') {
+    openSuccessPage();
+  }
 });
 
 var $body = document.querySelector('body');
@@ -204,50 +275,55 @@ $startOverButton.addEventListener('click', function (event) {
   clearDOMSongList();
 });
 
-var $signInButton = document.querySelector('.signin');
 var $createPlaylistButton = document.querySelector('.createPlaylist');
 var $createPlaylistButton2 = document.querySelector('.createPlaylist2');
+$createPlaylistButton2.addEventListener('click', openUploadPage);
+$createPlaylistButton.addEventListener('click', openGenrePage);
 
-$signInButton.addEventListener('mouseover', whiteLogoHover);
-$signInButton.addEventListener('mouseout', blackSpotifyLogo);
-$createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
-$createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
-$createPlaylistButton2.addEventListener('mouseover', whiteLogoHover);
-$createPlaylistButton2.addEventListener('mouseout', blackSpotifyLogo);
+var $spotifyButton = document.querySelector('.spotify-button');
+var $cancelButton = document.querySelector('.form-button-pink');
+$spotifyButton.addEventListener('click', openModal);
+$cancelButton.addEventListener('click', hideModal);
 
-$createPlaylistButton.addEventListener('click', function (event) {
-  openGenrePage();
-});
+var $whiteButtons = document.querySelectorAll('.button-white');
+for (const button of $whiteButtons) {
+  button.addEventListener('mouseover', whiteLogoHover);
+  button.addEventListener('mouseout', blackLogoHover);
+}
 
 function whiteLogoHover(event) {
-  var logoImg = $signInButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg.setAttribute('src', 'images/Spotify-Logo-White.png');
-  }
-
-  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
-  if (headphoneImg !== null) {
-    headphoneImg.setAttribute('src', 'images/Headphones-icon-white.png');
-  }
-  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
-  if (headphoneImg2 !== null) {
-    headphoneImg2.setAttribute('src', 'images/Headphones-icon-white.png');
+  if (event.target.tagName === 'IMG') {
+    if (event.target.classList.contains('img-logo')) {
+      event.target.setAttribute('src', 'images/Spotify-Logo-White.png');
+    } else if (event.target.classList.contains('headphone-img')) {
+      event.target.setAttribute('src', 'images/Headphones-icon-white.png');
+    }
+  } else if (event.target.tagName === 'BUTTON') {
+    var $img = event.target.querySelector('img');
+    if ($img.classList.contains('img-logo')) {
+      $img.setAttribute('src', 'images/Spotify-Logo-White.png');
+    } else if ($img.classList.contains('headphone-img')) {
+      $img.setAttribute('src', 'images/Headphones-icon-white.png');
+    }
   }
 }
-function blackSpotifyLogo(event) {
-  var logoImg = $signInButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg.setAttribute('src', 'images/Spotify-Logo-Black.png');
-  }
 
-  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
-  if (headphoneImg !== null) {
-    headphoneImg.setAttribute('src', 'images/Headphones-icon-black.png');
-  }
-
-  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
-  if (headphoneImg2 !== null) {
-    headphoneImg2.setAttribute('src', 'images/Headphones-icon-black.png');
+function blackLogoHover(event) {
+  if (event.target.tagName === 'IMG') {
+    if (event.target.classList.contains('img-logo')) {
+      event.target.setAttribute('src', 'images/Spotify-Logo-Black.png');
+    }
+    if (event.target.classList.contains('headphone-img')) {
+      event.target.setAttribute('src', 'images/Headphones-icon-black.png');
+    }
+  } else if (event.target.tagName === 'BUTTON') {
+    var $img = event.target.querySelector('img');
+    if ($img.classList.contains('img-logo')) {
+      $img.setAttribute('src', 'images/Spotify-Logo-Black.png');
+    }
+    if ($img.classList.contains('headphone-img')) {
+      $img.setAttribute('src', 'images/Headphones-icon-black.png');
+    }
   }
 }
 
@@ -592,6 +668,12 @@ $backArrow.addEventListener('click', function (event) {
     canSelect = true;
     goodToProceed = false;
   }
+
+  if ($backArrow.getAttribute('data-type') === 'upload') {
+    data.view = 'mixit';
+    openMixItPage();
+    data.playlistName = '';
+  }
 });
 
 // SPOTIFY API REQUESTS //
@@ -834,4 +916,16 @@ function populateSongList() {
 function clearDOMSongList() {
   var $songList = document.querySelector('ol.song-list');
   $songList.innerHTML = '';
+}
+
+var $modal = document.querySelector('.modal');
+var $blackOverlay = document.querySelector('.black-overlay');
+function hideModal() {
+  $modal.classList.add('hidden');
+  $blackOverlay.classList.add('hidden');
+}
+
+function openModal() {
+  $modal.classList.remove('hidden');
+  $blackOverlay.classList.remove('hidden');
 }
