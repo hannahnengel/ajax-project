@@ -301,9 +301,9 @@ $createAnother.addEventListener('click', function (event) {
 var $playlistNameForm = document.querySelector('.playlistNameForm');
 $playlistNameForm.addEventListener('submit', function (event) {
   event.preventDefault();
-  $playlistNameForm.elements.name = data.playlistName;
-  // API call to post to Spotify --> callback open Sucess//
-  openSuccessPage();
+  var playlistName = $playlistNameForm.elements.playlistName.value;
+  data.playlistName = playlistName;
+  createPlaylist();
 
 });
 
@@ -710,7 +710,6 @@ function handleCatPlaylistResponse() {
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
-
     alert(this.responseText);
   }
 }
@@ -913,6 +912,63 @@ function clearAllData() {
   };
   data.FilteredData.audioFeaturesMasterListFiltered = [];
   data.playlistItems = {};
+}
+
+var CREATEPLAYLIST;
+var userID = JSON.parse(localStorage.getItem('user_ID_Number'));
+function createPlaylist() {
+  var playlistName = data.playlistName;
+  CREATEPLAYLIST = 'https://api.spotify.com/v1/users/' + userID + '/playlists';
+  const body = {
+    name: playlistName,
+    description: '',
+    public: false
+  };
+  const JSONbody = JSON.stringify(body);
+  callApi('POST', CREATEPLAYLIST, JSONbody, handleCreatePlaylistResponse);
+}
+
+function handleCreatePlaylistResponse() {
+  if (this.status === 201) {
+    data.playlistID = JSON.parse(this.responseText).id;
+    data.playlistURI = JSON.parse(this.responseText).uri;
+    addSongsToPlaylist();
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+
+var ADDSONGS;
+var tracksArray;
+var tracks;
+function addSongsToPlaylist() {
+  tracks = createTracksString();
+  ADDSONGS = 'https://api.spotify.com/v1/playlists/' + data.playlistID + '/tracks?uris=' + tracks;
+  callApi('POST', ADDSONGS, null, handleAddSongs);
+}
+
+function createTracksString() {
+  tracks = '';
+  tracksArray = [];
+  tracksArray = data.playlistTrackIDs;
+  for (let i = 0; i < tracksArray.length; i++) {
+    if (i !== tracksArray.length) {
+      tracks += 'spotify%3Atrack%3A' + tracksArray[i] + '%2C';
+    } else tracks += 'spotify%3Atrack%3A' + tracksArray[i];
+  }
+  return tracks;
+}
+
+function handleAddSongs() {
+  if (this.status === 201) {
+    openSuccessPage();
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
 }
 
 function populateSongList() {
