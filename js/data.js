@@ -24,7 +24,8 @@ var data = {
   },
   FilteredData: {
     audioFeaturesMasterList: []
-  }
+  },
+  playlistURI: ''
 };
 
 var previousDataJSON = localStorage.getItem('data');

@@ -32,6 +32,7 @@ function openSelectionHeader() {
 
 function openWelcomePreloginPage() {
   data.view = 'welcome-prelogin';
+  clearAllData();
   openWelcomeHeader();
 
   for (const page of $pages) {
@@ -47,6 +48,7 @@ function openWelcomePreloginPage() {
 
 function openWelcomePostLoginPage() {
   data.view = 'welcome-postlogin';
+  clearAllData();
   openWelcomeHeader();
   openFooter();
 
@@ -285,6 +287,11 @@ var $spotifyButton = document.querySelector('.spotify-button');
 var $cancelButton = document.querySelector('.form-button-pink');
 $spotifyButton.addEventListener('click', openModal);
 $cancelButton.addEventListener('click', hideModal);
+
+var $openSpotifyButton = document.querySelector('.open-spotify-button');
+$openSpotifyButton.addEventListener('click', function (event) {
+  window.open(data.playlistURI);
+});
 
 var $whiteButtons = document.querySelectorAll('.button-white');
 for (const button of $whiteButtons) {
@@ -912,6 +919,7 @@ function clearAllData() {
   };
   data.FilteredData.audioFeaturesMasterListFiltered = [];
   data.playlistItems = {};
+  data.playlistURI = '';
 }
 
 var CREATEPLAYLIST;
