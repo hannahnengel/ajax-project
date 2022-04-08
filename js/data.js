@@ -161,3 +161,4 @@ function signedInAs() {
   var $userDisplayNameSpan = document.querySelector('span.user-display-name');
   $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
 }
+
