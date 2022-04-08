@@ -61,9 +61,6 @@
             <button class="button-white top-margin-10 bottom-margin-20 createPlaylist"><img
                 class="headphone-img padding-10" src="images/Headphones-icon-black.png" alt="Headphones Icon">Create
               Playlist</button>
-            <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as
-              <span class="user-display-name" style="text-decoration: underline;">Hannah</span>.</p>
-            <p class="small-text">Not you? <a class="pink-text" href="">Click here to sign in to Spotify</a></p>
           </div>
         </div>
       </div>
@@ -207,18 +204,39 @@
               </div>
 
             </form>
-            <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as
-              <span class="user-display-name2" style="text-decoration: underline;">Hannah</span>.</p>
-            <p class="small-text bottom-margin-5">Not you? <a class="pink-text" href="">Click here to sign in to
-                Spotify</a></p>
           </div>
         </div>
       </div>
-      <div data-view="selection-header" class="header row hidden">
+      <div data-view="success" class="page hidden">
+        <div class="row">
+          <div class="column-full">
+            <h1>Success!</h1>
+          </div>
+        </div>
+        <div class="row">
+          <div class="column-full">
+            <p>Your Playlist has been uploaded to your Spotify Account.</p>
+          </div>
+        </div>
+        <div class="row centered">
+          <button class="button-white open-spotify-button"><img class="img-logo padding-10"
+              src="images/Spotify-Logo-Black.png" alt="Spotify Logo">Open Spotify</button>
+        </div>
+        <div class="row centered bottom-margin-5">
+          <button class="button-white create-another-playlist-button"><img class="headphone-img padding-10"
+              src="images/Headphones-icon-black.png" alt="Headphones Icon">Create Another Playlist</button>
+        </div>
+      </div>
+      <div data-view="selection-header" class="header div-start-over row hidden">
         <div class="column-full start-over-div">
           <button class="start-over"><img class="padding-5" src="images/Undo-white.png" alt="Start Over">Start
             Over</button>
         </div>
+      </div>
+      <div class="footer hidden centered">
+        <p class="small-text"> <img src="/images/Spotify-Logo-White.png" alt="Spotify Logo"> You are signed in as <span
+            class="user-display-name" style="text-decoration: underline;">Hannah</span>.</p>
+        <p class="small-text">Not you? <a class="pink-text" href="">Click here to sign in to Spotify</a></p>
       </div>
     </div>
   </main>

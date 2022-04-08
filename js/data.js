@@ -24,7 +24,8 @@ var data = {
   },
   FilteredData: {
     audioFeaturesMasterList: []
-  }
+  },
+  playlistURI: ''
 };
 
 var previousDataJSON = localStorage.getItem('data');
@@ -158,7 +159,6 @@ function callApi(method, url, body, callback) {
 
 function signedInAs() {
   var $userDisplayNameSpan = document.querySelector('span.user-display-name');
-  var $userDisplayNameSpan2 = document.querySelector('span.user-display-name2');
   $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
-  $userDisplayNameSpan2.innerHTML = localStorage.getItem('user_ID');
 }
+

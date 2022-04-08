@@ -32,6 +32,7 @@ function openSelectionHeader() {
 
 function openWelcomePreloginPage() {
   data.view = 'welcome-prelogin';
+  clearAllData();
   openWelcomeHeader();
 
   for (const page of $pages) {
@@ -47,7 +48,9 @@ function openWelcomePreloginPage() {
 
 function openWelcomePostLoginPage() {
   data.view = 'welcome-postlogin';
+  clearAllData();
   openWelcomeHeader();
+  openFooter();
 
   for (const page of $pages) {
     if (page.getAttribute('data-view') === 'welcome-postlogin') {
@@ -65,6 +68,7 @@ function openGenrePage() {
   goodToProceed = false;
   data.view = 'genre';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'genre');
@@ -86,6 +90,7 @@ function openWorkoutPage() {
   goodToProceed = false;
   data.view = 'workout-mode';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'workout-mode');
@@ -108,6 +113,7 @@ function openDurationPage() {
   goodToProceed = false;
   data.view = 'duration';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'duration');
@@ -130,6 +136,7 @@ function openMixItPage() {
   goodToProceed = true;
   data.view = 'mixit';
   openSelectionHeader();
+  hideFooter();
 
   for (const a of $aTags) {
     a.setAttribute('data-type', 'mixit');
@@ -172,6 +179,43 @@ function openUploadPage() {
   }
 }
 
+function openSuccessPage() {
+  data.view = 'success';
+  openSelectionHeader();
+  hideModal();
+  openFooter();
+  for (const a of $aTags) {
+    a.setAttribute('data-type', 'success');
+    if (!a.classList.contains('pink-text')) {
+      a.classList.add('class', 'hidden');
+    }
+  }
+
+  for (const page of $pages) {
+    if (page.getAttribute('data-view') === 'success') {
+      page.classList.remove('hidden');
+      page.classList.add('active');
+    } else {
+      page.classList.add('hidden');
+      page.classList.remove('active');
+    }
+  }
+}
+
+function openFooter() {
+  var $footer = document.querySelector('.footer');
+  var $startOverButtonDiv = document.querySelector('.div-start-over');
+  $footer.classList.remove('hidden');
+  $startOverButtonDiv.classList.add('hidden');
+}
+
+function hideFooter() {
+  var $footer = document.querySelector('.footer');
+  var $startOverButtonDiv = document.querySelector('.div-start-over');
+  $footer.classList.add('hidden');
+  $startOverButtonDiv.classList.remove('hidden');
+}
+
 window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'welcome-prelogin' || data.view === 'welcome-postlogin') {
     openWelcomeHeader();
@@ -204,6 +248,10 @@ window.addEventListener('DOMContentLoaded', function (event) {
   if (data.view === 'upload') {
     openUploadPage();
   }
+
+  if (data.view === 'success') {
+    openSuccessPage();
+  }
 });
 
 var $body = document.querySelector('body');
@@ -230,77 +278,83 @@ $startOverButton.addEventListener('click', function (event) {
   clearDOMSongList();
 });
 
-var $signInButton = document.querySelector('.signin');
 var $createPlaylistButton = document.querySelector('.createPlaylist');
 var $createPlaylistButton2 = document.querySelector('.createPlaylist2');
+$createPlaylistButton2.addEventListener('click', openUploadPage);
+$createPlaylistButton.addEventListener('click', openGenrePage);
+
 var $spotifyButton = document.querySelector('.spotify-button');
 var $cancelButton = document.querySelector('.form-button-pink');
-
 $spotifyButton.addEventListener('click', openModal);
 $cancelButton.addEventListener('click', hideModal);
 
-$signInButton.addEventListener('mouseover', whiteLogoHover);
-$signInButton.addEventListener('mouseout', blackSpotifyLogo);
-$spotifyButton.addEventListener('mouseover', whiteLogoHover);
-$spotifyButton.addEventListener('mouseout', blackSpotifyLogo);
+var $openSpotifyButton = document.querySelector('.open-spotify-button');
+$openSpotifyButton.addEventListener('click', function (event) {
+  window.open(data.playlistURI);
+});
 
-$createPlaylistButton.addEventListener('mouseover', whiteLogoHover);
-$createPlaylistButton.addEventListener('mouseout', blackSpotifyLogo);
-$createPlaylistButton2.addEventListener('mouseover', whiteLogoHover);
-$createPlaylistButton2.addEventListener('mouseout', blackSpotifyLogo);
-$createPlaylistButton2.addEventListener('click', openUploadPage);
+var $whiteButtons = document.querySelectorAll('.button-white');
+for (const button of $whiteButtons) {
+  button.addEventListener('mouseover', whiteLogoHover);
+  button.addEventListener('mouseout', blackLogoHover);
+}
 
-$createPlaylistButton.addEventListener('click', function (event) {
-  openGenrePage();
+var $createAnother = document.querySelector('.create-another-playlist-button');
+$createAnother.addEventListener('click', function (event) {
+  clearAllData();
+  openWelcomePostLoginPage();
+});
+
+var $playlistNameForm = document.querySelector('.playlistNameForm');
+$playlistNameForm.addEventListener('submit', function (event) {
+  event.preventDefault();
+  var playlistName = $playlistNameForm.elements.playlistName.value;
+  data.playlistName = playlistName;
+  createPlaylist();
+
 });
 
 function whiteLogoHover(event) {
-  var logoImg = $signInButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg.setAttribute('src', 'images/Spotify-Logo-White.png');
+  if (event.target.tagName === 'IMG') {
+    if (event.target.classList.contains('img-logo')) {
+      event.target.setAttribute('src', 'images/Spotify-Logo-White.png');
+    } else if (event.target.classList.contains('headphone-img')) {
+      event.target.setAttribute('src', 'images/Headphones-icon-white.png');
+    }
+  } else if (event.target.tagName === 'BUTTON') {
+    var $img = event.target.querySelector('img');
+    if ($img.classList.contains('img-logo')) {
+      $img.setAttribute('src', 'images/Spotify-Logo-White.png');
+    } else if ($img.classList.contains('headphone-img')) {
+      $img.setAttribute('src', 'images/Headphones-icon-white.png');
+    }
   }
-  var logoImg2 = $spotifyButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg2.setAttribute('src', 'images/Spotify-Logo-White.png');
-  }
-
-  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
-  if (headphoneImg !== null) {
-    headphoneImg.setAttribute('src', 'images/Headphones-icon-white.png');
-  }
-  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
-  if (headphoneImg2 !== null) {
-    headphoneImg2.setAttribute('src', 'images/Headphones-icon-white.png');
-  }
-
 }
-function blackSpotifyLogo(event) {
-  var logoImg = $signInButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg.setAttribute('src', 'images/Spotify-Logo-Black.png');
-  }
 
-  var logoImg2 = $spotifyButton.querySelector('.img-logo');
-  if (logoImg !== null) {
-    logoImg2.setAttribute('src', 'images/Spotify-Logo-Black.png');
-  }
-
-  var headphoneImg = $createPlaylistButton.querySelector('.headphone-img');
-  if (headphoneImg !== null) {
-    headphoneImg.setAttribute('src', 'images/Headphones-icon-black.png');
-  }
-
-  var headphoneImg2 = $createPlaylistButton2.querySelector('.headphone-img');
-  if (headphoneImg2 !== null) {
-    headphoneImg2.setAttribute('src', 'images/Headphones-icon-black.png');
+function blackLogoHover(event) {
+  if (event.target.tagName === 'IMG') {
+    if (event.target.classList.contains('img-logo')) {
+      event.target.setAttribute('src', 'images/Spotify-Logo-Black.png');
+    }
+    if (event.target.classList.contains('headphone-img')) {
+      event.target.setAttribute('src', 'images/Headphones-icon-black.png');
+    }
+  } else if (event.target.tagName === 'BUTTON') {
+    var $img = event.target.querySelector('img');
+    if ($img.classList.contains('img-logo')) {
+      $img.setAttribute('src', 'images/Spotify-Logo-Black.png');
+    }
+    if ($img.classList.contains('headphone-img')) {
+      $img.setAttribute('src', 'images/Headphones-icon-black.png');
+    }
   }
 }
 
 function signedInAs() {
   var $userDisplayNameSpan = document.querySelector('span.user-display-name');
-  var $userDisplayNameSpan2 = document.querySelector('span.user-display-name2');
-  $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
-  $userDisplayNameSpan2.innerHTML = localStorage.getItem('user_ID');
+  if ($userDisplayNameSpan !== null) {
+    $userDisplayNameSpan.innerHTML = localStorage.getItem('user_ID');
+  }
 }
 signedInAs();
 var minSongLength = 1.0;
@@ -663,7 +717,6 @@ function handleCatPlaylistResponse() {
   } else if (this.status === 401) {
     refreshAccessToken();
   } else {
-
     alert(this.responseText);
   }
 }
@@ -866,6 +919,64 @@ function clearAllData() {
   };
   data.FilteredData.audioFeaturesMasterListFiltered = [];
   data.playlistItems = {};
+  data.playlistURI = '';
+}
+
+var CREATEPLAYLIST;
+var userID = JSON.parse(localStorage.getItem('user_ID_Number'));
+function createPlaylist() {
+  var playlistName = data.playlistName;
+  CREATEPLAYLIST = 'https://api.spotify.com/v1/users/' + userID + '/playlists';
+  const body = {
+    name: playlistName,
+    description: '',
+    public: false
+  };
+  const JSONbody = JSON.stringify(body);
+  callApi('POST', CREATEPLAYLIST, JSONbody, handleCreatePlaylistResponse);
+}
+
+function handleCreatePlaylistResponse() {
+  if (this.status === 201) {
+    data.playlistID = JSON.parse(this.responseText).id;
+    data.playlistURI = JSON.parse(this.responseText).uri;
+    addSongsToPlaylist();
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
+}
+
+var ADDSONGS;
+var tracksArray;
+var tracks;
+function addSongsToPlaylist() {
+  tracks = createTracksString();
+  ADDSONGS = 'https://api.spotify.com/v1/playlists/' + data.playlistID + '/tracks?uris=' + tracks;
+  callApi('POST', ADDSONGS, null, handleAddSongs);
+}
+
+function createTracksString() {
+  tracks = '';
+  tracksArray = [];
+  tracksArray = data.playlistTrackIDs;
+  for (let i = 0; i < tracksArray.length; i++) {
+    if (i !== tracksArray.length) {
+      tracks += 'spotify%3Atrack%3A' + tracksArray[i] + '%2C';
+    } else tracks += 'spotify%3Atrack%3A' + tracksArray[i];
+  }
+  return tracks;
+}
+
+function handleAddSongs() {
+  if (this.status === 201) {
+    openSuccessPage();
+  } else if (this.status === 401) {
+    refreshAccessToken();
+  } else {
+    alert(this.responseText);
+  }
 }
 
 function populateSongList() {

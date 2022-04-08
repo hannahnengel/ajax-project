@@ -54,12 +54,16 @@
 
   .modal {
     width: 300px;
-    height: 300px;
+    height: 200px;
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -130%);
     z-index: 2;
+  }
+
+  .button-white {
+    height: 4rem;
   }
 
   .select-button-div {
